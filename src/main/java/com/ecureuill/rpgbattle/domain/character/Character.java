@@ -2,6 +2,7 @@ package com.ecureuill.rpgbattle.domain.character;
 
 import java.util.UUID;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,6 +23,7 @@ public class Character {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
   private Type type;
+  @Column(unique = true)
   private String specie;
   private Integer life;
   private Integer strength;
