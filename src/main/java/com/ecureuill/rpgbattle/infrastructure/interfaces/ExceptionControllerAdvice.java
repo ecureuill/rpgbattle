@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.ecureuill.rpgbattle.application.exceptions.CharacterAlreadyExistException;
 import com.ecureuill.rpgbattle.application.exceptions.CharacterNotFoundException;
 
 import jakarta.validation.ValidationException;
@@ -17,6 +18,7 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
     NotFoundException.class,
     ValidationException.class,
     CharacterNotFoundException.class, 
+    CharacterAlreadyExistException.class
   })
   public ResponseEntity<String> handleBadRequestException(Exception e) {
     return ResponseEntity.badRequest().body(e.getMessage());
