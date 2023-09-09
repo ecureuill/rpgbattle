@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.ecureuill.rpgbattle.application.dtos.CharacterRequest;
+import com.ecureuill.rpgbattle.application.exceptions.CharacterNotFoundException;
 import com.ecureuill.rpgbattle.domain.character.Character;
 import com.ecureuill.rpgbattle.infrastructure.repositories.CharacterRepository;
 
@@ -22,5 +23,9 @@ public class CharacterService {
 
   public List<Character> getAllCharacters() {
     return characterRepository.findAll();
+  }
+
+  public Character getCharacterBySpecie(String specie) throws CharacterNotFoundException {
+    return characterRepository.findBySpecie(specie).orElseThrow(() -> new CharacterNotFoundException("Character of specie " + specie + " not found"));
   }
 }

@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.ecureuill.rpgbattle.application.dtos.CharacterRequest;
 import com.ecureuill.rpgbattle.application.dtos.CharacterResponse;
+import com.ecureuill.rpgbattle.application.exceptions.CharacterNotFoundException;
 import com.ecureuill.rpgbattle.application.services.CharacterService;
 import com.ecureuill.rpgbattle.domain.character.Character;
 
@@ -36,7 +38,12 @@ public class CharacterController {
   @GetMapping
   public ResponseEntity<List<CharacterResponse>> getAllCharacters() {
     List<Character> characters = characterService.getAllCharacters();
-    return ResponseEntity.ok().body(characters.stream().map(CharacterResponse::new).collect(Collectors.toList()));
-    
+    return ResponseEntity.ok().body(characters.stream().map(CharacterResponse::new).collect(Collectors.toList())); 
+  }
+
+  @GetMapping("/{specie}")
+  public ResponseEntity<CharacterResponse> getCharacterBySpecie(@PathVariable String specie) throws CharacterNotFoundException {
+    Character character = characterService.getCharacterBySpecie(specie);
+    return ResponseEntity.ok().body(new CharacterResponse(character));
   }
 }
