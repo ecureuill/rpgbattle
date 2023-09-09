@@ -1,5 +1,7 @@
 package com.ecureuill.rpgbattle.application.services;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.ecureuill.rpgbattle.application.dtos.CharacterRequest;
@@ -16,5 +18,9 @@ public class CharacterService {
   public Character createCharacter(CharacterRequest characterRequest) {
     Character character = characterRequest.toEntity();
     return characterRepository.save(character);
+  }
+
+  public List<Character> getAllCharacters() {
+    return characterRepository.findAll();
   }
 }

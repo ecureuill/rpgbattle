@@ -1,6 +1,10 @@
 package com.ecureuill.rpgbattle.application.controllers;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,5 +31,12 @@ public class CharacterController {
     Character character = characterService.createCharacter(characterRequest);
     var uri = uriBuilder.path("/characters/{id}").buildAndExpand(character.getId()).toUri();
     return ResponseEntity.created(uri).body(new CharacterResponse(character));
+  }
+
+  @GetMapping
+  public ResponseEntity<List<CharacterResponse>> getAllCharacters() {
+    List<Character> characters = characterService.getAllCharacters();
+    return ResponseEntity.ok().body(characters.stream().map(CharacterResponse::new).collect(Collectors.toList()));
+    
   }
 }
