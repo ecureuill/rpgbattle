@@ -1,5 +1,9 @@
 package com.ecureuill.rpgbattle.application.services;
 
+import java.util.Collections;
+import java.util.List;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,5 +37,16 @@ public class CharacterServiceTest {
     Mockito.verify(characterRepository, Mockito.times(1)).save(Mockito.any(Character.class));
   }
 
+  @DisplayName("Should get all characters")
+  @Test
+  void testGetAllCharacters() {
+    List<Character> expectedCharacters = dataFaker.generateCharacters();
+
+    Mockito.when(characterRepository.findAll()).thenReturn(expectedCharacters);
+    List<Character> characters = characterService.getAllCharacters();
+    
+    Mockito.verify(characterRepository, Mockito.times(1)).findAll();
+    Assertions.assertEquals(expectedCharacters.size(), characters.size());
+  }
 
 }
