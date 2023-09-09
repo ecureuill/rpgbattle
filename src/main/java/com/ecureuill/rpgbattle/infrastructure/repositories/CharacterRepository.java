@@ -11,4 +11,6 @@ public interface CharacterRepository extends JpaRepository<Character, UUID> {
 
   Optional<Character> findBySpecie(String specie);
 
+  void deleteBySpecie(String specie);
+
 }

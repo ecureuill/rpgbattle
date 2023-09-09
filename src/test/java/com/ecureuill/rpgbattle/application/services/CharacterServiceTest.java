@@ -112,4 +112,12 @@ public class CharacterServiceTest {
     Mockito.verify(characterRepository, Mockito.times(1)).findBySpecie(Mockito.anyString());
     Mockito.verify(characterRepository, Mockito.times(0)).save(Mockito.any(Character.class));
   }
+
+  @DisplayName("Should delete a character")
+  @Test
+  void testDeleteACharacter() throws CharacterNotFoundException {
+    Mockito.doNothing().when(characterRepository).deleteBySpecie(Mockito.anyString());
+    characterService.deleteCharacter("pathVariableSpecie");
+    Mockito.verify(characterRepository, Mockito.times(1)).deleteBySpecie("pathVariableSpecie");
+  }
 }

@@ -42,4 +42,8 @@ public class CharacterService {
     characterToSave.setId(character.getId());
     return characterRepository.save(characterToSave);
   }
+
+  public void deleteCharacter(String specie) {
+    characterRepository.deleteBySpecie(specie);
+  }
 }
