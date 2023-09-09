@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.ecureuill.rpgbattle.application.dtos.CharacterRequest;
 import com.ecureuill.rpgbattle.application.dtos.CharacterResponse;
+import com.ecureuill.rpgbattle.application.exceptions.CharacterAlreadyExistException;
 import com.ecureuill.rpgbattle.application.exceptions.CharacterNotFoundException;
 import com.ecureuill.rpgbattle.application.services.CharacterService;
 import com.ecureuill.rpgbattle.domain.character.Character;
@@ -44,6 +46,12 @@ public class CharacterController {
   @GetMapping("/{specie}")
   public ResponseEntity<CharacterResponse> getCharacterBySpecie(@PathVariable String specie) throws CharacterNotFoundException {
     Character character = characterService.getCharacterBySpecie(specie);
+    return ResponseEntity.ok().body(new CharacterResponse(character));
+  }
+
+  @PutMapping("/{specie}")
+  public ResponseEntity<CharacterResponse> updateCharacter(@PathVariable String specie, @RequestBody @Valid CharacterRequest characterRequest) throws CharacterNotFoundException, CharacterAlreadyExistException {
+    Character character = characterService.updateCharacter(specie, characterRequest);
     return ResponseEntity.ok().body(new CharacterResponse(character));
   }
 }

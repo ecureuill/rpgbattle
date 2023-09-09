@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.ecureuill.rpgbattle.application.dtos.CharacterRequest;
+import com.ecureuill.rpgbattle.application.exceptions.CharacterAlreadyExistException;
 import com.ecureuill.rpgbattle.application.exceptions.CharacterNotFoundException;
 import com.ecureuill.rpgbattle.domain.character.Character;
 import com.ecureuill.rpgbattle.infrastructure.repositories.CharacterRepository;
@@ -62,7 +63,7 @@ public class CharacterServiceTest {
     Assertions.assertEquals(expectedCharacter.getSpecie(), character.getSpecie());
   }
 
-  @DisplayName("Should throw when attempts to get by specie a not existent character")
+  @DisplayName("Should throw CharacterNotFoundException when attempts to get by specie a not existent character")
   @Test
   void testGetOneCharacterBySpecie_CharacterDoesNotExist() {
     Mockito.when(characterRepository.findBySpecie(Mockito.anyString())).thenReturn(Optional.empty());
@@ -72,4 +73,43 @@ public class CharacterServiceTest {
     Mockito.verify(characterRepository, Mockito.times(1)).findBySpecie(Mockito.anyString());
   }
 
+  @DisplayName("Should update a character")
+  @Test
+  void testUpdateACharacter() throws CharacterNotFoundException, CharacterAlreadyExistException {
+    CharacterRequest characterRequest = dataFaker.generateCharacterRequest();
+    Character expectedCharacter = characterRequest.toEntity();
+
+    Mockito.when(characterRepository.findBySpecie(Mockito.anyString())).thenReturn(Optional.of(expectedCharacter));
+    Mockito.when(characterRepository.save(Mockito.any(Character.class))).thenReturn(expectedCharacter);
+    characterService.updateCharacter(characterRequest.specie(), characterRequest);
+    
+    Mockito.verify(characterRepository, Mockito.times(1)).save(Mockito.any(Character.class));
+    Mockito.verify(characterRepository, Mockito.times(1)).findBySpecie(Mockito.anyString());
+  }
+
+  @DisplayName("Should throw CharacterAlreadyExistException when attempt to update a character and replaced specie is already registered")
+  @Test
+  void testUpdateACharacter_CharacterAlreadyExists() {
+    CharacterRequest characterRequest = dataFaker.generateCharacterRequest();
+    Character expectedCharacter = characterRequest.toEntity();
+
+    Mockito.when(characterRepository.findBySpecie("pathVariableSpecie")).thenReturn(Optional.of(expectedCharacter));
+    Mockito.when(characterRepository.findBySpecie(characterRequest.specie())).thenReturn(Optional.of(dataFaker.generateCharacter()));
+
+    Assertions.assertThrows(CharacterAlreadyExistException.class,() -> characterService.updateCharacter("pathVariableSpecie", characterRequest));
+    
+    Mockito.verify(characterRepository, Mockito.times(0)).save(Mockito.any(Character.class));
+    Mockito.verify(characterRepository, Mockito.times(2)).findBySpecie(Mockito.anyString());
+  }
+
+  @DisplayName("Should throw CharacterNotFoundException when attempts to update a not existent character")
+  @Test
+  void testUpdateACharacter_CharacterDoesNotExist() {
+    Mockito.when(characterRepository.findBySpecie(Mockito.anyString())).thenReturn(Optional.empty());
+    
+    Assertions.assertThrows(CharacterNotFoundException.class, () -> characterService.updateCharacter("", dataFaker.generateCharacterRequest()));
+    
+    Mockito.verify(characterRepository, Mockito.times(1)).findBySpecie(Mockito.anyString());
+    Mockito.verify(characterRepository, Mockito.times(0)).save(Mockito.any(Character.class));
+  }
 }
