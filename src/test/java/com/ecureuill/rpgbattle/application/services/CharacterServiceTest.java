@@ -29,7 +29,7 @@ public class CharacterServiceTest {
   @DisplayName("Should save a character")
   @Test
   public void shouldSaveACharacter() {
-    CharacterRequest characterRequest = dataFaker.generaCharacterRequest();
+    CharacterRequest characterRequest = dataFaker.generateCharacterRequest();
     
     Mockito.when(characterRepository.save(Mockito.any(Character.class))).thenReturn(characterRequest.toEntity());
     characterService.createCharacter(characterRequest);
