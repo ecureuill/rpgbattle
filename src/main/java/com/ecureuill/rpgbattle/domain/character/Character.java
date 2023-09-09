@@ -2,6 +2,8 @@ package com.ecureuill.rpgbattle.domain.character;
 
 import java.util.UUID;
 
+import com.ecureuill.rpgbattle.domain.dice.Dice;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -41,5 +43,13 @@ public class Character {
     var diceQuantity = Integer.valueOf(values[0]);
     var diceFace = Integer.valueOf(values[1]);
     this.dice = new Dice(diceFace, diceQuantity);
+  }
+
+  public int calculateDamage(int demageDiceValue) {
+    return this.strength + demageDiceValue;
+  }
+
+  public void calculateLife(int demage) {
+    this.life -= demage;
   }
 }

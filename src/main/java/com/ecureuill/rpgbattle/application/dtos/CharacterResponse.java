@@ -3,8 +3,8 @@ package com.ecureuill.rpgbattle.application.dtos;
 import java.util.UUID;
 
 import com.ecureuill.rpgbattle.domain.character.Character;
-import com.ecureuill.rpgbattle.domain.character.Dice;
 import com.ecureuill.rpgbattle.domain.character.Type;
+import com.ecureuill.rpgbattle.domain.dice.Dice;
 
 public record CharacterResponse(
   UUID id,

@@ -19,7 +19,7 @@ public class CharacterTest {
     Character character = new Character();
     character.setDice(quantity+"d"+face);
     Assertions.assertEquals(face, character.getDice().getFaces());
-    Assertions.assertEquals(quantity, character.getDice().getQuantity());
+    Assertions.assertEquals(quantity, character.getDice().getRollTimes());
 
   }
 }

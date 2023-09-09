@@ -6,8 +6,8 @@ import java.util.Locale;
 
 import com.ecureuill.rpgbattle.application.dtos.CharacterRequest;
 import com.ecureuill.rpgbattle.domain.character.Type;
+import com.ecureuill.rpgbattle.domain.dice.Dice;
 import com.ecureuill.rpgbattle.domain.character.Character;
-import com.ecureuill.rpgbattle.domain.character.Dice;
 import com.github.javafaker.Faker;
 
 public class DataFaker {
