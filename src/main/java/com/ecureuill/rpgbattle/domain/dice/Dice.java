@@ -2,6 +2,8 @@ package com.ecureuill.rpgbattle.domain.dice;
 
 import java.util.Random;
 
+import com.ecureuill.rpgbattle.infrastructure.providers.RandomProvider;
+
 import jakarta.persistence.Embeddable;
 import lombok.Data;
 
@@ -26,7 +28,7 @@ public class Dice {
 
   public Integer roll(){
     Integer total = 0;
-    Random rand = new Random();
+    Random rand = RandomProvider.getInstance();
     for(int i = 0; i < this.rollTimes; i++) {
       total += rand.nextInt(MIN_DICE_FACE, faces);
     }
