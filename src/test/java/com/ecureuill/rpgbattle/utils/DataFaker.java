@@ -7,6 +7,8 @@ import java.util.Locale;
 import com.ecureuill.rpgbattle.application.dtos.CharacterRequest;
 import com.ecureuill.rpgbattle.domain.character.Type;
 import com.ecureuill.rpgbattle.domain.dice.Dice;
+import com.ecureuill.rpgbattle.domain.battle.Battle;
+import com.ecureuill.rpgbattle.domain.battle.Player;
 import com.ecureuill.rpgbattle.domain.character.Character;
 import com.github.javafaker.Faker;
 
@@ -36,5 +38,24 @@ public class DataFaker {
       characterList.add(generateCharacter());
     }
     return characterList;
+  }
+
+  public Battle generateBattle(Boolean withoutCharacter){
+      return new Battle(generatePlayer(withoutCharacter), generatePlayer(withoutCharacter));
+  }
+
+  public Battle generateBattle(){
+    return new Battle(generatePlayer(), generatePlayer());
+  }
+
+  public Player generatePlayer(){
+    return new Player(faker.name().username(), generateCharacter());
+  }
+
+  public Player generatePlayer(Boolean withoutCharacter){
+    if(withoutCharacter){
+      return new Player(faker.name().username(), null);
+    }
+    return generatePlayer();
   }
 }
