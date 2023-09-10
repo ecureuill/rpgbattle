@@ -11,8 +11,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.ecureuill.rpgbattle.domain.battle.Player;
 import com.ecureuill.rpgbattle.domain.battle.Turn;
 import com.ecureuill.rpgbattle.domain.character.Character;
-import com.ecureuill.rpgbattle.domain.dice.Dice;
 import com.ecureuill.rpgbattle.utils.DataFaker;
+import com.ecureuill.rpgbattle.utils.DataFakerProvider;
 
 @ExtendWith(MockitoExtension.class)
 public class DemageMoveStateTest {
@@ -30,7 +30,7 @@ public class DemageMoveStateTest {
   @Test
   @DisplayName("Should set the correct next state")
   public void testHandle(){
-    DataFaker dataFaker = new DataFaker();
+    DataFaker dataFaker = DataFakerProvider.getInstace();
     Mockito.when(attackPlayer.getCharacter()).thenReturn(dataFaker.generateCharacter());
     Mockito.when(defensePlayer.getCharacter()).thenReturn(dataFaker.generateCharacter());
 

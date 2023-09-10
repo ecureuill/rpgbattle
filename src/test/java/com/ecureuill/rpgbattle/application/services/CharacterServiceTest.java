@@ -17,6 +17,7 @@ import com.ecureuill.rpgbattle.application.exceptions.CharacterAlreadyExistExcep
 import com.ecureuill.rpgbattle.application.exceptions.CharacterNotFoundException;
 import com.ecureuill.rpgbattle.domain.character.Character;
 import com.ecureuill.rpgbattle.infrastructure.repositories.CharacterRepository;
+import com.ecureuill.rpgbattle.utils.DataFakerProvider;
 import com.ecureuill.rpgbattle.utils.DataFaker;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,7 +27,7 @@ public class CharacterServiceTest {
   @InjectMocks
   private CharacterService characterService;
   
-  private final DataFaker dataFaker = new DataFaker();
+  private final DataFaker dataFaker = DataFakerProvider.getInstace();
 
   @DisplayName("Should save a character")
   @Test
