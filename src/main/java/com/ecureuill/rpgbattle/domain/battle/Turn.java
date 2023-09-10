@@ -2,6 +2,11 @@ package com.ecureuill.rpgbattle.domain.battle;
 
 import java.util.UUID;
 
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+
+import com.ecureuill.rpgbattle.domain.battle.events.AttackTurnEvent;
+import com.ecureuill.rpgbattle.domain.battle.events.EndTurnEvent;
 import com.ecureuill.rpgbattle.domain.battle.state.AttackMoveState;
 import com.ecureuill.rpgbattle.domain.battle.state.DefenseMoveState;
 import com.ecureuill.rpgbattle.domain.battle.state.DemageMoveState;
@@ -24,7 +29,7 @@ import lombok.Data;
 @Entity
 @Table(name = "turns")
 @Data
-public class Turn {
+public class Turn implements ApplicationEventPublisherAware {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
@@ -38,6 +43,8 @@ public class Turn {
   private TurnState state;
   @Enumerated(EnumType.STRING)
   private TurnStateType stateType;
+  @Transient
+  private ApplicationEventPublisher eventPublisher;
 
   @PostLoad
   void fillTransient() {
@@ -74,8 +81,22 @@ public class Turn {
     }
   }
 
+  @Override
+  public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+    this.eventPublisher = applicationEventPublisher;
+  }
+
   public void movement(Player attackPlayer, Player defensePlayer){
     this.state.handle(this, attackPlayer, defensePlayer);
+
+    if(state instanceof EndTurnEvent) {
+      eventPublisher.publishEvent(new EndTurnEvent(this, this));
+    }
+
+    if(state instanceof AttackMoveState) {
+      eventPublisher.publishEvent(new AttackTurnEvent(this, this));
+    }
   }
+
 }
 
