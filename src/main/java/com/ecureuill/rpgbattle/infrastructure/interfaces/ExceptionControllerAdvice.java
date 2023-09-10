@@ -9,6 +9,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.ecureuill.rpgbattle.application.exceptions.CharacterAlreadyExistException;
 import com.ecureuill.rpgbattle.application.exceptions.CharacterNotFoundException;
+import com.ecureuill.rpgbattle.application.exceptions.InvalidBattleParametersException;
+import com.ecureuill.rpgbattle.application.exceptions.PlayerNotFoundException;
 
 import jakarta.validation.ValidationException;
 
@@ -18,7 +20,9 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
     NotFoundException.class,
     ValidationException.class,
     CharacterNotFoundException.class, 
-    CharacterAlreadyExistException.class
+    CharacterAlreadyExistException.class,
+    PlayerNotFoundException.class,
+    InvalidBattleParametersException.class
   })
   public ResponseEntity<String> handleBadRequestException(Exception e) {
     return ResponseEntity.badRequest().body(e.getMessage());
