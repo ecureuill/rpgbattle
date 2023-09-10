@@ -45,11 +45,11 @@ public class Character {
     this.dice = new Dice(diceFace, diceQuantity);
   }
 
-  public int calculateDamage(int demageDiceValue) {
+  public int producesDemage(int demageDiceValue) {
     return this.strength + demageDiceValue;
   }
 
-  public void calculateLife(int demage) {
+  public void receiveDemage(int demage) {
     this.life -= demage;
   }
 }
