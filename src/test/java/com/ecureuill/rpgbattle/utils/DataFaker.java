@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.ecureuill.rpgbattle.application.dtos.BattleCreateRequest;
 import com.ecureuill.rpgbattle.application.dtos.CharacterRequest;
 import com.ecureuill.rpgbattle.domain.character.Type;
 import com.ecureuill.rpgbattle.domain.dice.Dice;
@@ -57,5 +58,9 @@ public class DataFaker {
       return new Player(faker.name().username(), null);
     }
     return generatePlayer();
+  }
+
+  public BattleCreateRequest generateBattleCreateRequest(){
+    return new BattleCreateRequest(faker.name().username(), faker.name().username());
   }
 }
