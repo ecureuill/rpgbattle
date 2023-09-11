@@ -1,6 +1,7 @@
 package com.ecureuill.rpgbattle.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -10,6 +11,7 @@ import com.ecureuill.rpgbattle.domain.character.Type;
 import com.ecureuill.rpgbattle.domain.dice.Dice;
 import com.ecureuill.rpgbattle.domain.battle.Battle;
 import com.ecureuill.rpgbattle.domain.battle.Player;
+import com.ecureuill.rpgbattle.domain.battle.PlayerBattle;
 import com.ecureuill.rpgbattle.domain.character.Character;
 import com.github.javafaker.Faker;
 
@@ -42,20 +44,31 @@ public class DataFaker {
   }
 
   public Battle generateBattle(Boolean withoutCharacter){
-      return new Battle(generatePlayer(withoutCharacter), generatePlayer(withoutCharacter));
+      Player playerOne = generatePlayer(withoutCharacter);
+      Player playerTwo = generatePlayer(withoutCharacter);
+      Battle battle = new Battle( );
+      PlayerBattle playerBattleOne = new PlayerBattle();
+      playerBattleOne.setBattle(battle);
+      playerBattleOne.setPlayer(playerOne);
+      PlayerBattle playerBattleTwo = new PlayerBattle();
+      playerBattleTwo.setBattle(battle);
+      playerBattleTwo.setPlayer(playerTwo);
+      battle.setPlayers(Arrays.asList(playerBattleOne, playerBattleTwo));
+
+      return battle;
   }
 
   public Battle generateBattle(){
-    return new Battle(generatePlayer(), generatePlayer());
+    return generateBattle(false);
   }
 
   public Player generatePlayer(){
-    return new Player(faker.name().username(), generateCharacter());
+    return new Player(faker.name().username(), null, generateCharacter());
   }
 
   public Player generatePlayer(Boolean withoutCharacter){
     if(withoutCharacter){
-      return new Player(faker.name().username(), null);
+      return new Player(faker.name().username(), null, null);
     }
     return generatePlayer();
   }

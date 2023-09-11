@@ -4,45 +4,46 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.context.event.EventListener;
-import org.springframework.data.annotation.CreatedDate;
+
 import com.ecureuill.rpgbattle.domain.battle.events.TurnEvent;
 import com.ecureuill.rpgbattle.domain.battle.strategies.turnstrategy.EventStrategyManager;
 import com.ecureuill.rpgbattle.domain.battle.strategies.turnstrategy.TurnEventStrategy;
 import com.ecureuill.rpgbattle.domain.character.Character;
 import com.ecureuill.rpgbattle.domain.dice.Dice;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "battles")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class Battle {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
   private Stage stage;
-  @ManyToMany(fetch = FetchType.EAGER)
-  private List<Player> players;
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "battle")
+  private List<PlayerBattle> players;
   @OneToMany
   @JoinColumn(name = "turnId")
   private List<Turn> turns;  
   private UUID currentTurn;
-  @CreatedDate
+  @CreationTimestamp
   private LocalDateTime startTime;
   private LocalDateTime lastTurnTime;
   private LocalDateTime endTime;
@@ -51,10 +52,7 @@ public class Battle {
   @Transient
   private EventStrategyManager eventStrategyManager;
 
-  public Battle(Player playerOne, Player playerTwo) {
-    this.players = new ArrayList<>();
-    this.players.add(playerOne);
-    this.players.add(playerTwo);
+  public Battle() {
     this.stage = Stage.CHARACTER_SELECTION;
     this.startTime = LocalDateTime.now();
     this.turns = new ArrayList<>();
@@ -71,13 +69,14 @@ public class Battle {
 
   private Player findPlayerByUsername(String username) {
     return players.stream()
-      .filter(player -> player.getUserName().equals(username))
+      .map(PlayerBattle::getPlayer)
+      .filter(player -> player.getUsername().equals(username))
       .findFirst()
       .orElseThrow();
   }
 
   private void activeInitiative(){
-    if(players.stream().anyMatch(player -> player.getCharacter() == null)) {
+    if(players.stream().map(PlayerBattle::getPlayer).anyMatch(player -> player.getCharacter() == null)) {
       return;
     }
     this.stage = Stage.INITIATIVE;
@@ -96,9 +95,9 @@ public class Battle {
     this.stage = Stage.TURNS;
 
     if (playerOneDiceValue > playerTwoDiceValue) {
-      return players.get(0);
+      return players.get(0).getPlayer();
     } else {
-      return players.get(1);
+      return players.get(1).getPlayer();
     }
   }
 
