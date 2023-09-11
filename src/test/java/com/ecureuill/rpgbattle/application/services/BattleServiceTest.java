@@ -13,6 +13,7 @@ import com.ecureuill.rpgbattle.application.dtos.BattleCreateRequest;
 import com.ecureuill.rpgbattle.application.exceptions.InvalidBattleParametersException;
 import com.ecureuill.rpgbattle.application.exceptions.PlayerNotFoundException;
 import com.ecureuill.rpgbattle.domain.battle.Battle;
+import com.ecureuill.rpgbattle.domain.user.User;
 import com.ecureuill.rpgbattle.infrastructure.repositories.BattleRepository;
 import com.ecureuill.rpgbattle.utils.DataFaker;
 import com.ecureuill.rpgbattle.utils.DataFakerProvider;
@@ -22,7 +23,7 @@ public class BattleServiceTest {
   @Mock
   private BattleRepository battleRepository;
   @Mock
-  private PlayerService playerService;
+  private UserService userService;
   @InjectMocks
   private BattleService battleService;
   
@@ -32,13 +33,14 @@ public class BattleServiceTest {
     DataFaker faker = DataFakerProvider.getInstace();
     BattleCreateRequest request = DataFakerProvider.getInstace().generateBattleCreateRequest();
     
-    Mockito.when(playerService.findByUsername(Mockito.anyString())).thenReturn(faker.generatePlayer(true));
+    Mockito.when(userService.findByUsername(Mockito.anyString())).thenReturn(new User());
     Mockito.when(battleRepository.save(Mockito.any(Battle.class))).thenReturn(faker.generateBattle(true));
   
-    battleService.createBattle(request);
+    var result = battleService.createBattle(request);
 
-    Mockito.verify(playerService, Mockito.times(2)).findByUsername(Mockito.anyString());
+    Mockito.verify(userService, Mockito.times(2)).findByUsername(Mockito.anyString());
     Mockito.verify(battleRepository, Mockito.times(1)).save(Mockito.any(Battle.class));
+    Assertions.assertNotNull(result);
   }
 
   @DisplayName("Should throw PlayerNotFoundException when invalid username is provided")
@@ -46,11 +48,11 @@ public class BattleServiceTest {
   void testCreateBattle_PlayerNotFound() throws PlayerNotFoundException {
     BattleCreateRequest request = DataFakerProvider.getInstace().generateBattleCreateRequest();
 
-    Mockito.when(playerService.findByUsername(Mockito.anyString())).thenThrow(PlayerNotFoundException.class);
+    Mockito.when(userService.findByUsername(Mockito.anyString())).thenThrow(PlayerNotFoundException.class);
 
-    Assertions.assertThrows(PlayerNotFoundException.class, () -> battleService.createBattle(request));
+    Assertions.assertThrows(InvalidBattleParametersException.class, () -> battleService.createBattle(request));
 
-    Mockito.verify(playerService, Mockito.times(1)).findByUsername(Mockito.anyString());
+    Mockito.verify(userService, Mockito.times(1)).findByUsername(Mockito.anyString());
     Mockito.verify(battleRepository, Mockito.times(0)).save(Mockito.any(Battle.class));
   
   }
@@ -62,7 +64,7 @@ public class BattleServiceTest {
 
     Assertions.assertThrows(InvalidBattleParametersException.class, () -> battleService.createBattle(request));
 
-    Mockito.verify(playerService, Mockito.times(0)).findByUsername(Mockito.anyString());
+    Mockito.verify(userService, Mockito.times(0)).findByUsername(Mockito.anyString());
     Mockito.verify(battleRepository, Mockito.times(0)).save(Mockito.any(Battle.class));
 
   }

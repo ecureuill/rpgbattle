@@ -13,7 +13,7 @@ public record BattleResponse(
   LocalDateTime startTime
 ) {
   public BattleResponse(Battle battle) {
-    this(battle.getId(), battle.getPlayers().get(0).getUserName(), battle.getPlayers().get(1).getUserName(), battle.getStage().getName(), battle.getStartTime());
+    this(battle.getId(), battle.getPlayers().get(0).getPlayer().getUsername(), battle.getPlayers().get(1).getPlayer().getUsername(), battle.getStage().getName(), battle.getStartTime());
   }
 
 }

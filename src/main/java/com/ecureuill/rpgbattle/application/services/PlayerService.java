@@ -15,7 +15,7 @@ public class PlayerService {
   private final PlayerRepository playerRepository;
   
   public Player findByUsername(String anyString) throws PlayerNotFoundException {
-    return playerRepository.findById(anyString).orElseThrow(() -> new PlayerNotFoundException(anyString));
+    return playerRepository.findByUsername(anyString).orElseThrow(() -> new PlayerNotFoundException(anyString));
   }
   
 }
