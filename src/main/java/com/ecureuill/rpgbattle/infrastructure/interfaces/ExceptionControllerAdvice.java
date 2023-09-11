@@ -11,6 +11,7 @@ import com.ecureuill.rpgbattle.application.exceptions.CharacterAlreadyExistExcep
 import com.ecureuill.rpgbattle.application.exceptions.CharacterNotFoundException;
 import com.ecureuill.rpgbattle.application.exceptions.InvalidBattleParametersException;
 import com.ecureuill.rpgbattle.application.exceptions.PlayerNotFoundException;
+import com.ecureuill.rpgbattle.application.services.BattleNotFoundException;
 
 import jakarta.validation.ValidationException;
 
@@ -22,7 +23,8 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
     CharacterNotFoundException.class, 
     CharacterAlreadyExistException.class,
     PlayerNotFoundException.class,
-    InvalidBattleParametersException.class
+    InvalidBattleParametersException.class,
+    BattleNotFoundException.class
   })
   public ResponseEntity<String> handleBadRequestException(Exception e) {
     return ResponseEntity.badRequest().body(e.getMessage());
