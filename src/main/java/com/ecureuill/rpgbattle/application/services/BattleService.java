@@ -1,10 +1,13 @@
 package com.ecureuill.rpgbattle.application.services;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Service;
-
+import org.springframework.util.MultiValueMap;
 import com.ecureuill.rpgbattle.application.dtos.BattleCreateRequest;
 import com.ecureuill.rpgbattle.application.exceptions.InvalidBattleParametersException;
 import com.ecureuill.rpgbattle.application.exceptions.PlayerNotFoundException;
+import com.ecureuill.rpgbattle.application.services.specifications.QueryParamsSpecification;
 import com.ecureuill.rpgbattle.domain.battle.Battle;
 import com.ecureuill.rpgbattle.domain.battle.Player;
 import com.ecureuill.rpgbattle.infrastructure.repositories.BattleRepository;
@@ -17,6 +20,7 @@ public class BattleService {
 
   private final BattleRepository battleRepository;
   private final PlayerService playerService;
+  private final List<QueryParamsSpecification> specifications;
 
   public Battle createBattle(BattleCreateRequest battleUsers) throws InvalidBattleParametersException {
 
@@ -33,4 +37,18 @@ public class BattleService {
     }
   }
 
+  public List<Battle> getAllBattles(MultiValueMap<String, String> queryParams) {
+    
+    if(queryParams.isEmpty()){
+      return battleRepository.findAll();
+    }
+
+    for (QueryParamsSpecification specification : specifications) {
+      if(specification.isSatisfiedBy(queryParams)) {
+        return specification.getResults(queryParams);
+      }
+    }
+    
+    return new ArrayList<>();
+  }
 }

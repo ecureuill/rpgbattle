@@ -4,17 +4,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import org.springframework.context.event.EventListener;
 import org.springframework.data.annotation.CreatedDate;
-
 import com.ecureuill.rpgbattle.domain.battle.events.TurnEvent;
 import com.ecureuill.rpgbattle.domain.battle.strategies.EventStrategyManager;
 import com.ecureuill.rpgbattle.domain.battle.strategies.TurnEventStrategy;
 import com.ecureuill.rpgbattle.domain.character.Character;
 import com.ecureuill.rpgbattle.domain.dice.Dice;
-
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,18 +24,19 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "battles")
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class Battle {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
   private Stage stage;
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.EAGER)
   private List<Player> players;
   @OneToMany
   @JoinColumn(name = "turnId")
@@ -62,7 +61,6 @@ public class Battle {
     this.currentTurn = null;
     this.dice = new Dice();
     this.eventStrategyManager = new EventStrategyManager();
-  
   }
 
   public void addCharacter(String username, Character character) {
