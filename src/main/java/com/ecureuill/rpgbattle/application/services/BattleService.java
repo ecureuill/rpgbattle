@@ -2,6 +2,8 @@ package com.ecureuill.rpgbattle.application.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import com.ecureuill.rpgbattle.application.dtos.BattleCreateRequest;
@@ -50,5 +52,9 @@ public class BattleService {
     }
     
     return new ArrayList<>();
+  }
+
+  public Battle getBattleById(UUID uuid) throws BattleNotFoundException {
+    return battleRepository.findById(uuid).orElseThrow(() -> new BattleNotFoundException(uuid));
   }
 }
