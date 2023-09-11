@@ -1,4 +1,4 @@
-package com.ecureuill.rpgbattle.domain.battle.strategies;
+package com.ecureuill.rpgbattle.domain.battle.strategies.turnstrategy;
 
 import java.util.HashMap;
 import java.util.Map;

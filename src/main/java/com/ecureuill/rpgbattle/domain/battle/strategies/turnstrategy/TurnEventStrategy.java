@@ -1,4 +1,4 @@
-package com.ecureuill.rpgbattle.domain.battle.strategies;
+package com.ecureuill.rpgbattle.domain.battle.strategies.turnstrategy;
 
 import com.ecureuill.rpgbattle.domain.battle.Battle;
 import com.ecureuill.rpgbattle.domain.battle.events.TurnEvent;
