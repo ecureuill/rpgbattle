@@ -21,7 +21,6 @@ import com.ecureuill.rpgbattle.application.exceptions.InvalidBattleParametersExc
 import com.ecureuill.rpgbattle.application.services.BattleService;
 import com.ecureuill.rpgbattle.domain.battle.Battle;
 
-import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 
 @RestController
