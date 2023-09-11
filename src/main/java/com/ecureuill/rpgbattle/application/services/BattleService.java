@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import com.ecureuill.rpgbattle.application.dtos.BattleCreateRequest;
+import com.ecureuill.rpgbattle.application.exceptions.BattleNotFoundException;
 import com.ecureuill.rpgbattle.application.exceptions.InvalidBattleParametersException;
 import com.ecureuill.rpgbattle.application.exceptions.PlayerNotFoundException;
 import com.ecureuill.rpgbattle.application.services.specifications.QueryParamsSpecification;

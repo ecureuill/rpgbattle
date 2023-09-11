@@ -7,11 +7,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.ecureuill.rpgbattle.application.exceptions.BattleNotFoundException;
+import com.ecureuill.rpgbattle.application.exceptions.BattleStateException;
 import com.ecureuill.rpgbattle.application.exceptions.CharacterAlreadyExistException;
 import com.ecureuill.rpgbattle.application.exceptions.CharacterNotFoundException;
 import com.ecureuill.rpgbattle.application.exceptions.InvalidBattleParametersException;
+import com.ecureuill.rpgbattle.application.exceptions.NoTurnActiveException;
 import com.ecureuill.rpgbattle.application.exceptions.PlayerNotFoundException;
-import com.ecureuill.rpgbattle.application.services.BattleNotFoundException;
+import com.ecureuill.rpgbattle.application.exceptions.TurnActiveException;
+import com.ecureuill.rpgbattle.application.exceptions.TurnNotFoundException;
 
 import jakarta.validation.ValidationException;
 
@@ -24,7 +28,11 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
     CharacterAlreadyExistException.class,
     PlayerNotFoundException.class,
     InvalidBattleParametersException.class,
-    BattleNotFoundException.class
+    BattleNotFoundException.class,
+    BattleStateException.class,
+    NoTurnActiveException.class,
+    TurnActiveException.class,
+    TurnNotFoundException.class
   })
   public ResponseEntity<String> handleBadRequestException(Exception e) {
     return ResponseEntity.badRequest().body(e.getMessage());

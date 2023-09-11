@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ecureuill.rpgbattle.application.dtos.BattleCreateRequest;
 import com.ecureuill.rpgbattle.application.dtos.BattleResponse;
+import com.ecureuill.rpgbattle.application.exceptions.BattleNotFoundException;
 import com.ecureuill.rpgbattle.application.exceptions.InvalidBattleParametersException;
-import com.ecureuill.rpgbattle.application.services.BattleNotFoundException;
 import com.ecureuill.rpgbattle.application.services.BattleService;
 import com.ecureuill.rpgbattle.domain.battle.Battle;
 

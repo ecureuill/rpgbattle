@@ -1,4 +1,4 @@
-package com.ecureuill.rpgbattle.application.services;
+package com.ecureuill.rpgbattle.application.exceptions;
 
 import java.util.UUID;
 
