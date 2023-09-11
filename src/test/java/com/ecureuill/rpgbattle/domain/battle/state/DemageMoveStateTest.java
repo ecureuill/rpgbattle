@@ -10,6 +10,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.ecureuill.rpgbattle.domain.battle.Player;
 import com.ecureuill.rpgbattle.domain.battle.Turn;
+import com.ecureuill.rpgbattle.domain.battle.states.turnstate.DemageMoveState;
+import com.ecureuill.rpgbattle.domain.battle.states.turnstate.EndTurnState;
 import com.ecureuill.rpgbattle.domain.character.Character;
 import com.ecureuill.rpgbattle.utils.DataFaker;
 import com.ecureuill.rpgbattle.utils.DataFakerProvider;

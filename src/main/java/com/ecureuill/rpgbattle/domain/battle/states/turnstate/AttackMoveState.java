@@ -1,4 +1,4 @@
-package com.ecureuill.rpgbattle.domain.battle.state;
+package com.ecureuill.rpgbattle.domain.battle.states.turnstate;
 
 import com.ecureuill.rpgbattle.domain.battle.Player;
 import com.ecureuill.rpgbattle.domain.battle.Turn;

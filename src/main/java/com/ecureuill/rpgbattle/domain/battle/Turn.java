@@ -7,12 +7,12 @@ import org.springframework.context.ApplicationEventPublisherAware;
 
 import com.ecureuill.rpgbattle.domain.battle.events.AttackTurnEvent;
 import com.ecureuill.rpgbattle.domain.battle.events.EndTurnEvent;
-import com.ecureuill.rpgbattle.domain.battle.state.AttackMoveState;
-import com.ecureuill.rpgbattle.domain.battle.state.DefenseMoveState;
-import com.ecureuill.rpgbattle.domain.battle.state.DemageMoveState;
-import com.ecureuill.rpgbattle.domain.battle.state.EndTurnState;
-import com.ecureuill.rpgbattle.domain.battle.state.TurnState;
-import com.ecureuill.rpgbattle.domain.battle.state.TurnStateType;
+import com.ecureuill.rpgbattle.domain.battle.states.turnstate.AttackMoveState;
+import com.ecureuill.rpgbattle.domain.battle.states.turnstate.DefenseMoveState;
+import com.ecureuill.rpgbattle.domain.battle.states.turnstate.DemageMoveState;
+import com.ecureuill.rpgbattle.domain.battle.states.turnstate.EndTurnState;
+import com.ecureuill.rpgbattle.domain.battle.states.turnstate.TurnState;
+import com.ecureuill.rpgbattle.domain.battle.states.turnstate.TurnStateType;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

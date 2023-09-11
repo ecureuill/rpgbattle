@@ -10,6 +10,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.ecureuill.rpgbattle.domain.battle.Player;
 import com.ecureuill.rpgbattle.domain.battle.Turn;
+import com.ecureuill.rpgbattle.domain.battle.states.turnstate.DefenseMoveState;
+import com.ecureuill.rpgbattle.domain.battle.states.turnstate.DemageMoveState;
 
 @ExtendWith(MockitoExtension.class)
 public class DefenseMoveStateTest {
