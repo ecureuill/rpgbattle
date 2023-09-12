@@ -1,6 +1,7 @@
 package com.ecureuill.rpgbattle.domain.battle.states.turnstate;
 
 import com.ecureuill.rpgbattle.domain.battle.Turn;
+import com.ecureuill.rpgbattle.domain.battle.strategies.turnstrategy.TurnAttackStrategy;
 import com.ecureuill.rpgbattle.domain.dice.Dice;
 
 public class AttackMoveState implements TurnAttackStrategy{

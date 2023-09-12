@@ -2,6 +2,7 @@ package com.ecureuill.rpgbattle.domain.battle.states.turnstate;
 
 import com.ecureuill.rpgbattle.domain.battle.Player;
 import com.ecureuill.rpgbattle.domain.battle.Turn;
+import com.ecureuill.rpgbattle.domain.battle.strategies.turnstrategy.TurnDemageStrategy;
 import com.ecureuill.rpgbattle.domain.character.Character;
 import com.ecureuill.rpgbattle.domain.dice.Dice;
 
