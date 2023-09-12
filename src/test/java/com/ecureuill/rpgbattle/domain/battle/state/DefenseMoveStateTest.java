@@ -28,7 +28,7 @@ public class DefenseMoveStateTest {
   @Test
   void testHandle() {
     DefenseMoveState defenseMoveState = new DefenseMoveState();
-    defenseMoveState.handle(context, attackPlayer, defensePlayer);
+    defenseMoveState.handle(context);
     Mockito.verify(context, Mockito.times(1)).setState(Mockito.any(DemageMoveState.class));
   }
 }

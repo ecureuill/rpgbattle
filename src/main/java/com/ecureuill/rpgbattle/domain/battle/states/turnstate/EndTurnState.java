@@ -1,11 +1,11 @@
 package com.ecureuill.rpgbattle.domain.battle.states.turnstate;
 
-import com.ecureuill.rpgbattle.domain.battle.Player;
 import com.ecureuill.rpgbattle.domain.battle.Turn;
 
 public class EndTurnState implements TurnState {
+  private TurnState next = null;
   @Override
-  public void handle(Turn context, Player attackPlayer, Player defensePlayer) {
-    //DO NOTHING
+  public void setNextState(Turn context) {
+    context.setState(next);
   }
 }

@@ -4,17 +4,16 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.context.event.EventListener;
-
 import com.ecureuill.rpgbattle.domain.battle.events.TurnEvent;
+import com.ecureuill.rpgbattle.domain.battle.states.battlestate.BattleState;
 import com.ecureuill.rpgbattle.domain.battle.strategies.turnstrategy.EventStrategyManager;
 import com.ecureuill.rpgbattle.domain.battle.strategies.turnstrategy.TurnEventStrategy;
 import com.ecureuill.rpgbattle.domain.character.Character;
 import com.ecureuill.rpgbattle.domain.dice.Dice;
-
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -43,6 +42,8 @@ public class Battle {
   @JoinColumn(name = "turnId")
   private List<Turn> turns;  
   private UUID currentTurn;
+  private Integer turnsSequence = 0; 
+  private Integer playerTurn;
   @CreationTimestamp
   private LocalDateTime startTime;
   private LocalDateTime lastTurnTime;
@@ -51,6 +52,10 @@ public class Battle {
   private Dice dice;
   @Transient
   private EventStrategyManager eventStrategyManager;
+  @Transient
+  private BattleState state;
+  @Embedded
+  private Initiative initiative;
 
   public Battle() {
     this.stage = Stage.CHARACTER_SELECTION;
