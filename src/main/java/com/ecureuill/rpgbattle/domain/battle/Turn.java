@@ -87,7 +87,20 @@ public class Turn implements ApplicationEventPublisherAware {
   }
 
   public void movement(Player attackPlayer, Player defensePlayer){
-    this.state.handle(this, attackPlayer, defensePlayer);
+
+    if(state instanceof AttackMoveState){
+      ((AttackMoveState)state).handle(this);
+    }
+    else if(state instanceof DefenseMoveState){
+      ((DefenseMoveState)state).handle(this);
+    }
+    else if(state instanceof DemageMoveState){
+      ((DemageMoveState)state).handle(this, attackPlayer, defensePlayer);
+    } 
+    else {
+      return;
+    }
+    state.setNextState(null);
 
     if(state instanceof EndTurnEvent) {
       eventPublisher.publishEvent(new EndTurnEvent(this, this));

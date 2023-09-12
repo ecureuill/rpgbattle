@@ -6,7 +6,7 @@ import com.ecureuill.rpgbattle.domain.character.Character;
 import com.ecureuill.rpgbattle.domain.dice.Dice;
 
 public class DemageMoveState implements TurnDemageStrategy {
-  private TurnState nextState = new EndTurnState();
+  private TurnState next = new EndTurnState();
 
   @Override
   public void handle(Turn context, Player attackPlayer, Player defensePlayer) {
@@ -17,6 +17,10 @@ public class DemageMoveState implements TurnDemageStrategy {
     defensePlayer.getCharacter().receiveDemage(demage);
     context.setDemageDiceValue(demageDiceValue);
     context.setDemage(demage);
-    context.setState(nextState);
+  }
+
+  @Override
+  public void setNextState(Turn context) {
+    context.setState(next);
   }
 }

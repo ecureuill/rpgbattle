@@ -28,7 +28,7 @@ public class AttackMoveStateTest {
   @DisplayName("Should set the correct next state")
   public void testHandle() {
     AttackMoveState attackMoveState = new AttackMoveState();
-    attackMoveState.handle(context, attackPlayer, defensePlayer);
+    attackMoveState.handle(context);
     Mockito.verify(context, Mockito.times(1)).setState(Mockito.any(DefenseMoveState.class));
   }
 }
