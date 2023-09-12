@@ -1,13 +1,12 @@
 package com.ecureuill.rpgbattle.application.services;
 
+import java.util.List;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.ecureuill.rpgbattle.application.controllers.UserRequest;
 import com.ecureuill.rpgbattle.application.exceptions.PlayerNotFoundException;
 import com.ecureuill.rpgbattle.domain.user.User;
 import com.ecureuill.rpgbattle.infrastructure.repositories.UserRepository;
-
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -26,5 +25,9 @@ public class UserService {
 
   public User findByUsername(String playerOne) throws PlayerNotFoundException {
     return userRepository.findByUsername(playerOne).orElseThrow(() -> new PlayerNotFoundException(playerOne));
+  }
+
+  public List<User> getAll() {
+    return userRepository.findAll();
   }
 }

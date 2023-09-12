@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-
 import com.ecureuill.rpgbattle.application.dtos.BattleCreateRequest;
 import com.ecureuill.rpgbattle.application.dtos.CharacterRequest;
 import com.ecureuill.rpgbattle.domain.character.Type;
@@ -63,12 +62,12 @@ public class DataFaker {
   }
 
   public Player generatePlayer(){
-    return new Player(faker.name().username(), null, generateCharacter());
+    return new Player(null, faker.name().username(), null, generateCharacter());
   }
 
   public Player generatePlayer(Boolean withoutCharacter){
     if(withoutCharacter){
-      return new Player(faker.name().username(), null, null);
+      return new Player(null, faker.name().username(), null, null);
     }
     return generatePlayer();
   }

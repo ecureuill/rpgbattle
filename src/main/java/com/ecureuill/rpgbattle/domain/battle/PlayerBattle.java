@@ -1,7 +1,6 @@
 package com.ecureuill.rpgbattle.domain.battle;
 
 import java.util.UUID;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,5 +36,9 @@ public class PlayerBattle {
             ", player=" + player.getUsername() +
             ", battle=" + battle.getId() +
             '}';
+  }
+  public PlayerBattle updatePlayer(Player updatedPlayer) {
+    this.player = updatedPlayer;
+    return this;
   }
 }

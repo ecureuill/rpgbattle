@@ -15,7 +15,7 @@ import com.ecureuill.rpgbattle.domain.battle.states.turnstate.TurnState;
 import com.ecureuill.rpgbattle.domain.battle.strategies.battlestrategy.BattleTurnsStrategy;
 
 public class TurnsBattleState implements BattleTurnsStrategy {
-  private final BattleState nextState = new TurnsBattleState();
+  private final BattleState nextState = null;
   private TurnState state;
 
   public void setNextTurnState(TurnState state){

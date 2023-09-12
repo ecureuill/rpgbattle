@@ -1,11 +1,12 @@
 package com.ecureuill.rpgbattle.domain.battle;
 
 import java.util.List;
-
+import java.util.UUID;
 import com.ecureuill.rpgbattle.domain.character.Character;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -21,6 +22,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "players")
 public class Player {
   @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
   private String username;
   @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
   private List<PlayerBattle> battles;

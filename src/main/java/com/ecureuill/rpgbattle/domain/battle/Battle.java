@@ -6,8 +6,15 @@ import java.util.List;
 import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.context.event.EventListener;
+
+import com.ecureuill.rpgbattle.application.exceptions.PlayerNotFoundException;
 import com.ecureuill.rpgbattle.domain.battle.events.TurnEvent;
 import com.ecureuill.rpgbattle.domain.battle.states.battlestate.BattleState;
+import com.ecureuill.rpgbattle.domain.battle.states.battlestate.CreatedBattleState;
+import com.ecureuill.rpgbattle.domain.battle.states.battlestate.EndBattleState;
+import com.ecureuill.rpgbattle.domain.battle.states.battlestate.InitiativeBattleState;
+import com.ecureuill.rpgbattle.domain.battle.states.battlestate.NotCreatedBattleState;
+import com.ecureuill.rpgbattle.domain.battle.states.battlestate.TurnsBattleState;
 import com.ecureuill.rpgbattle.domain.battle.strategies.turnstrategy.EventStrategyManager;
 import com.ecureuill.rpgbattle.domain.battle.strategies.turnstrategy.TurnEventStrategy;
 import com.ecureuill.rpgbattle.domain.character.Character;
@@ -21,6 +28,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PostLoad;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -57,12 +65,53 @@ public class Battle {
   @Embedded
   private Initiative initiative;
 
+  public void setState(BattleState state) {
+    this.state = state;
+    if (state instanceof NotCreatedBattleState) {
+      this.stage = Stage.NOT_CREATED;
+    } else if (state instanceof CreatedBattleState) {
+      this.stage = Stage.CHARACTER_SELECTION;
+    } else if (state instanceof InitiativeBattleState) {
+      this.stage = Stage.INITIATIVE;
+    } else if (state instanceof TurnsBattleState) {
+      this.stage = Stage.TURNS;
+    } else if (state instanceof EndBattleState) {
+      this.stage = Stage.END;
+    }
+  }
+
+  @PostLoad
+  void fillTransient() {
+    if(stage != null){
+      switch (stage) {
+        case NOT_CREATED:
+          state = new NotCreatedBattleState();
+          break;
+        case CHARACTER_SELECTION:
+          state = new CreatedBattleState();
+          break;
+        case INITIATIVE:
+          state = new InitiativeBattleState();
+          break;
+        case TURNS:
+          state = new TurnsBattleState();
+          break;
+        case END:
+          state = new EndBattleState();
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
   public Battle() {
     this.stage = Stage.CHARACTER_SELECTION;
     this.startTime = LocalDateTime.now();
     this.turns = new ArrayList<>();
     this.currentTurn = null;
     this.dice = new Dice();
+    this.state = new NotCreatedBattleState();
     this.eventStrategyManager = new EventStrategyManager();
   }
 
@@ -122,6 +171,24 @@ public class Battle {
     if(strategy != null){
       strategy.handleEvent(turnEvent, this);
     }
+  }
+  
+  public void updatePlayer(Player updatedPlayer) {
+    for (int i = 0; i < players.size(); i++) {
+      PlayerBattle playerBattle = players.get(i);
+      if (playerBattle.getPlayer().getUsername().equals(updatedPlayer.getUsername())) {
+        players.set(i, playerBattle.updatePlayer(updatedPlayer));
+        break;
+      }
+    }
+  }
+
+  public Player findPlayerInBattle(String playerUsername) throws PlayerNotFoundException {
+    return players.stream()
+      .map(PlayerBattle::getPlayer)
+      .filter(p -> p.getUsername().equals(playerUsername))
+      .findFirst()
+      .orElseThrow(() -> new PlayerNotFoundException(playerUsername));
   }
 }
 

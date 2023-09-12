@@ -1,9 +1,11 @@
 package com.ecureuill.rpgbattle.domain.battle.states.battlestate;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Arrays;
+
 import com.ecureuill.rpgbattle.domain.battle.Battle;
 import com.ecureuill.rpgbattle.domain.battle.Player;
+import com.ecureuill.rpgbattle.domain.battle.PlayerBattle;
 import com.ecureuill.rpgbattle.domain.battle.strategies.battlestrategy.BattleNotCreatedStrategy;
 
 public class NotCreatedBattleState implements BattleNotCreatedStrategy {
@@ -15,9 +17,19 @@ public class NotCreatedBattleState implements BattleNotCreatedStrategy {
   }
 
   @Override
-  public void createBattle(Battle context, List<Player> players) {
-    context.getPlayers().get(0).setPlayer(players.get(0));
-    context.getPlayers().get(1).setPlayer(players.get(1)); 
+  public void createBattle(Battle context, Player playerOne, Player playerTwo) {
+
+    PlayerBattle playerBattleOne = new PlayerBattle();
+    playerBattleOne.setBattle(context);
+    playerBattleOne.setPlayer(playerOne);
+    PlayerBattle playerBattleTwo = new PlayerBattle();
+    playerBattleTwo.setBattle(context);
+    playerBattleTwo.setPlayer(playerTwo);
+    context.setPlayers(Arrays.asList(playerBattleOne, playerBattleTwo));
+    playerOne.setBattles(Arrays.asList(playerBattleOne));
+    playerTwo.setBattles(Arrays.asList(playerBattleTwo));
     context.setStartTime(LocalDateTime.now());
+    context.setState(nextState);
+
   }  
 }
