@@ -1,4 +1,4 @@
-package com.ecureuill.rpgbattle.application.controllers;
+package com.ecureuill.rpgbattle.application.dtos;
 
 import com.ecureuill.rpgbattle.domain.user.User;
 

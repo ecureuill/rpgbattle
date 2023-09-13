@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import com.ecureuill.rpgbattle.application.dtos.UserRequest;
+import com.ecureuill.rpgbattle.application.dtos.UserResponse;
 import com.ecureuill.rpgbattle.application.services.UserService;
 import com.ecureuill.rpgbattle.domain.user.User;
 
