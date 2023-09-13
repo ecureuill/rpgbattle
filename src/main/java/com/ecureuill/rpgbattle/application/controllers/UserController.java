@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.ecureuill.rpgbattle.application.services.UserService;
 import com.ecureuill.rpgbattle.domain.user.User;
+
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -19,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
   private final UserService userService;
+
+  @Transactional
   @PostMapping
   public ResponseEntity<UserResponse> create(@RequestBody @Valid UserRequest data, UriComponentsBuilder uriBuilder){
     User user = userService.save(data);

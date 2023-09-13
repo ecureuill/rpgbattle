@@ -20,7 +20,6 @@ import com.ecureuill.rpgbattle.application.exceptions.BattleStateException;
 import com.ecureuill.rpgbattle.application.exceptions.InvalidBattleParametersException;
 import com.ecureuill.rpgbattle.application.services.BattleService;
 import com.ecureuill.rpgbattle.domain.battle.Battle;
-
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +28,9 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/battles")
 @RequiredArgsConstructor
 public class BattleController {
-
   private final BattleService battleService;
 
+  @Transactional
   @PostMapping
   public ResponseEntity<BattleResponse> createBattle(@RequestBody BattleCreateRequest battleUsers) throws InvalidBattleParametersException, BattleStateException {
     Battle battle = battleService.createBattle(battleUsers);
