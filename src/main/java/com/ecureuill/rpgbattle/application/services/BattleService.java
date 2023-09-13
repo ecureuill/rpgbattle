@@ -30,7 +30,7 @@ public class BattleService {
   private final CharacterService characterService;
   private final List<QueryParamsSpecification> specifications;
 
-  public Battle createBattle(BattleCreateRequest battleUsers) throws InvalidBattleParametersException {
+  public Battle createBattle(BattleCreateRequest battleUsers) throws InvalidBattleParametersException, BattleStateException {
 
     if(battleUsers.playerOne().equals(battleUsers.playerTwo())){
       throw new InvalidBattleParametersException("Player One and Player Two should not be the same");
@@ -40,7 +40,11 @@ public class BattleService {
       Player playerTwo = new Player(null, userService.findByUsername(battleUsers.playerTwo()).getUsername(), null, null);
       Battle battle = new Battle( );
 
-      ((NotCreatedBattleState)battle.getState()).createBattle(battle, playerOne, playerTwo);
+      try {
+        ((NotCreatedBattleState)battle.getState()).createBattle(battle, playerOne, playerTwo);
+      } catch (ClassCastException e) {
+        throw new BattleStateException("This operation is not allowed while battle is in " + battle.getStage().getName());
+      }
 
       return battleRepository.save(battle);
     } catch (PlayerNotFoundException e) {

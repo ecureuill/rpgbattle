@@ -16,6 +16,7 @@ import com.ecureuill.rpgbattle.application.dtos.BattleCreateRequest;
 import com.ecureuill.rpgbattle.application.dtos.BattleResponse;
 import com.ecureuill.rpgbattle.application.dtos.BattleSelectCharacterRequest;
 import com.ecureuill.rpgbattle.application.exceptions.BattleNotFoundException;
+import com.ecureuill.rpgbattle.application.exceptions.BattleStateException;
 import com.ecureuill.rpgbattle.application.exceptions.InvalidBattleParametersException;
 import com.ecureuill.rpgbattle.application.services.BattleService;
 import com.ecureuill.rpgbattle.domain.battle.Battle;
@@ -32,7 +33,7 @@ public class BattleController {
   private final BattleService battleService;
 
   @PostMapping
-  public ResponseEntity<BattleResponse> createBattle(@RequestBody BattleCreateRequest battleUsers) throws InvalidBattleParametersException {
+  public ResponseEntity<BattleResponse> createBattle(@RequestBody BattleCreateRequest battleUsers) throws InvalidBattleParametersException, BattleStateException {
     Battle battle = battleService.createBattle(battleUsers);
     return ResponseEntity.ok(new BattleResponse(battle));
   }
