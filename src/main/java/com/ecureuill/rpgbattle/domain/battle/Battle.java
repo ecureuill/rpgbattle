@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.context.event.EventListener;
-
 import com.ecureuill.rpgbattle.application.exceptions.PlayerNotFoundException;
 import com.ecureuill.rpgbattle.domain.battle.events.TurnEvent;
 import com.ecureuill.rpgbattle.domain.battle.states.battlestate.BattleState;
@@ -112,6 +111,7 @@ public class Battle {
     this.currentTurn = null;
     this.dice = new Dice();
     this.state = new NotCreatedBattleState();
+    this.initiative = new Initiative();
     this.eventStrategyManager = new EventStrategyManager();
   }
 

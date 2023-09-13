@@ -9,10 +9,11 @@ public record BattleResponse(
   PlayerResponse playerOne,
   PlayerResponse playerTwo,
   String stage,
-  LocalDateTime startTime
+  LocalDateTime startTime,
+  InitiativeResponse initiative
 ) {
   public BattleResponse(Battle battle) {
-    this(battle.getId(), new PlayerResponse(battle.getPlayers().get(0).getPlayer()), new PlayerResponse(battle.getPlayers().get(1).getPlayer()), battle.getStage().getName(), battle.getStartTime());
+    this(battle.getId(), new PlayerResponse(battle.getPlayers().get(0).getPlayer()), new PlayerResponse(battle.getPlayers().get(1).getPlayer()), battle.getStage().getName(), battle.getStartTime(), new InitiativeResponse(battle.getInitiative()));
   }
 
 }

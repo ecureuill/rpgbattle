@@ -16,6 +16,7 @@ import com.ecureuill.rpgbattle.application.services.specifications.QueryParamsSp
 import com.ecureuill.rpgbattle.domain.battle.Battle;
 import com.ecureuill.rpgbattle.domain.battle.Player;
 import com.ecureuill.rpgbattle.domain.battle.states.battlestate.CreatedBattleState;
+import com.ecureuill.rpgbattle.domain.battle.states.battlestate.InitiativeBattleState;
 import com.ecureuill.rpgbattle.domain.battle.states.battlestate.NotCreatedBattleState;
 import com.ecureuill.rpgbattle.domain.character.Character;
 import com.ecureuill.rpgbattle.infrastructure.repositories.BattleRepository;
@@ -29,9 +30,9 @@ public class BattleService {
   private final UserService userService;
   private final CharacterService characterService;
   private final List<QueryParamsSpecification> specifications;
-
+  
   public Battle createBattle(BattleCreateRequest battleUsers) throws InvalidBattleParametersException, BattleStateException {
-
+    
     if(battleUsers.playerOne().equals(battleUsers.playerTwo())){
       throw new InvalidBattleParametersException("Player One and Player Two should not be the same");
     }
@@ -51,7 +52,7 @@ public class BattleService {
       throw new InvalidBattleParametersException(e.getMessage());
     }
   }
-
+  
   public List<Battle> getAllBattles(MultiValueMap<String, String> queryParams) {
     
     if(queryParams.isEmpty()){
@@ -85,7 +86,21 @@ public class BattleService {
     return battle;
   }
 
+  public Battle determineInitiative(UUID battleId) throws BattleStateException, BattleNotFoundException{
+    Battle battle = findBattleById(battleId);
+
+    try {
+      ((InitiativeBattleState)battle.getState()).determineInitiative(battle);
+    } catch (ClassCastException e) {
+        throw new BattleStateException("This operation is not allowed while battle is in " + battle.getStage().getName());
+    }
+
+    battleRepository.save(battle);
+    return battle;
+  }
+
   private Battle findBattleById(UUID battleId) throws BattleNotFoundException {
     return battleRepository.findById(battleId).orElseThrow(() -> new BattleNotFoundException(battleId));
   }
+
 }

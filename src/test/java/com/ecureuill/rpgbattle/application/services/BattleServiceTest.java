@@ -2,7 +2,6 @@ package com.ecureuill.rpgbattle.application.services;
 
 import java.util.Optional;
 import java.util.UUID;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import com.ecureuill.rpgbattle.application.dtos.BattleCreateRequest;
 import com.ecureuill.rpgbattle.application.dtos.BattleSelectCharacterRequest;
 import com.ecureuill.rpgbattle.application.exceptions.BattleNotFoundException;
@@ -25,7 +23,9 @@ import com.ecureuill.rpgbattle.domain.battle.Player;
 import com.ecureuill.rpgbattle.domain.battle.Stage;
 import com.ecureuill.rpgbattle.domain.battle.states.battlestate.CreatedBattleState;
 import com.ecureuill.rpgbattle.domain.battle.states.battlestate.InitiativeBattleState;
+import com.ecureuill.rpgbattle.domain.battle.states.battlestate.TurnsBattleState;
 import com.ecureuill.rpgbattle.domain.character.Character;
+import com.ecureuill.rpgbattle.domain.dice.Dice;
 import com.ecureuill.rpgbattle.domain.user.User;
 import com.ecureuill.rpgbattle.infrastructure.repositories.BattleRepository;
 import com.ecureuill.rpgbattle.utils.DataFaker;
@@ -138,5 +138,69 @@ public class BattleServiceTest {
     Assertions.assertEquals(characterOne, result.getPlayers().get(1).getPlayer().getCharacter());
     Assertions.assertEquals(characterTwo, result.getPlayers().get(0).getPlayer().getCharacter());
     Assertions.assertEquals(InitiativeBattleState.class, result.getState().getClass());
+  }
+
+  @DisplayName("Should determine that playerOne has the initiative")
+  @Test
+  void testDetermineInitiative_PlayerOne() throws BattleStateException, BattleNotFoundException {
+    DataFaker faker = DataFakerProvider.getInstace();
+    Battle battle = faker.generateBattle(false);
+    battle.setState(new InitiativeBattleState());
+    Dice dice = Mockito.spy(battle.getDice());
+    Mockito.when(battleRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.of(battle));
+    Mockito.when(dice.roll()).thenReturn(6, 1);
+    battle.setDice(dice);
+
+    battleService.determineInitiative(UUID.randomUUID());
+
+    ArgumentCaptor<Battle> battleArgumentCaptor = ArgumentCaptor.forClass(Battle.class);
+    Mockito.verify(battleRepository, Mockito.times(1)).save(battleArgumentCaptor.capture());
+    var result = battleArgumentCaptor.getValue();
+    Assertions.assertEquals(6, result.getInitiative().getPlayerOneDiceValue());
+    Assertions.assertEquals(1, result.getInitiative().getPlayerTwoDiceValue());
+    Assertions.assertEquals(TurnsBattleState.class, result.getState().getClass());  
+  }
+
+  @DisplayName("Should determine that playerTwo has the initiative")
+  @Test
+  void testDetermineInitiative_PlayerTwo() throws BattleStateException, BattleNotFoundException {
+    DataFaker faker = DataFakerProvider.getInstace();
+    Battle battle = faker.generateBattle(false);
+    battle.setState(new InitiativeBattleState());
+    Dice dice = Mockito.spy(battle.getDice());
+    Mockito.when(battleRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.of(battle));
+    Mockito.when(dice.roll()).thenReturn(1, 6);
+    battle.setDice(dice);
+
+    battleService.determineInitiative(UUID.randomUUID());
+
+    ArgumentCaptor<Battle> battleArgumentCaptor = ArgumentCaptor.forClass(Battle.class);
+    Mockito.verify(battleRepository, Mockito.times(1)).save(battleArgumentCaptor.capture());
+    var result = battleArgumentCaptor.getValue();
+    Assertions.assertEquals(1, result.getInitiative().getPlayerOneDiceValue());
+    Assertions.assertEquals(6, result.getInitiative().getPlayerTwoDiceValue());
+    Assertions.assertEquals(TurnsBattleState.class, result.getState().getClass());
+  }
+
+  @DisplayName("Should not determine initiative when dices value are equal")
+  @Test
+  void testDetermineInitiative_DicesEqual() throws BattleStateException, BattleNotFoundException {
+    DataFaker faker = DataFakerProvider.getInstace();
+    Battle battle = faker.generateBattle(false);
+    battle.setState(new InitiativeBattleState());
+    Dice dice = Mockito.spy(battle.getDice());
+    Mockito.when(battleRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.of(battle));
+    Mockito.when(dice.roll()).thenReturn(1, 1);
+    battle.setDice(dice);
+
+    battleService.determineInitiative(UUID.randomUUID());
+
+    ArgumentCaptor<Battle> battleArgumentCaptor = ArgumentCaptor.forClass(Battle.class);
+    Mockito.verify(battleRepository, Mockito.times(1)).save(battleArgumentCaptor.capture());
+    var result = battleArgumentCaptor.getValue();
+    Assertions.assertEquals(1, result.getInitiative().getPlayerOneDiceValue());
+    Assertions.assertEquals(1, result.getInitiative().getPlayerTwoDiceValue());
+    Assertions.assertEquals(InitiativeBattleState.class, result.getState().getClass());
+    
   }
 }

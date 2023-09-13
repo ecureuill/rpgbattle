@@ -32,5 +32,7 @@ public class InitiativeBattleState implements BattleInitiativeStrategy {
     else {
       context.getInitiative().setPlayer(null);
     }
+
+    setNextState(context);
   }
 }

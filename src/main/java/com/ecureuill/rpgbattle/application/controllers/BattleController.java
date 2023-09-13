@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ecureuill.rpgbattle.application.dtos.BattleCreateRequest;
 import com.ecureuill.rpgbattle.application.dtos.BattleResponse;
 import com.ecureuill.rpgbattle.application.dtos.BattleSelectCharacterRequest;
+import com.ecureuill.rpgbattle.application.dtos.InitiativeResponse;
 import com.ecureuill.rpgbattle.application.exceptions.BattleNotFoundException;
 import com.ecureuill.rpgbattle.application.exceptions.BattleStateException;
 import com.ecureuill.rpgbattle.application.exceptions.InvalidBattleParametersException;
@@ -47,6 +48,17 @@ public class BattleController {
       throw new InvalidBattleParametersException("Character not selected\n"+e.getMessage(), e);
     }
   }
+
+  @Transactional
+  @PostMapping("/{battleId}/Initiative")
+  public ResponseEntity<InitiativeResponse> determineInitiative(@PathVariable UUID battleId) throws BattleNotFoundException, InvalidBattleParametersException {
+    try {
+      Battle battle = battleService.determineInitiative(battleId);
+      return ResponseEntity.ok(new InitiativeResponse(battle.getInitiative()));
+    } catch (Exception e) {
+      throw new InvalidBattleParametersException("Battle not started\n"+e.getMessage(), e);
+    }
+  }  
 
   @GetMapping
   public ResponseEntity<List<BattleResponse>> getAllBattles(@RequestParam(required=false) MultiValueMap<String, String> queryParams) {
