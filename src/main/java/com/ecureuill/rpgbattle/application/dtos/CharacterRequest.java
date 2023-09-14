@@ -22,7 +22,7 @@ public record CharacterRequest(
   @Positive
   Integer agility,
   @NotNull
-  @Pattern(regexp = "[0-9]d([0-9]{2})")
+  @Pattern(regexp = "[0-9]{1,2}d[0-9]{1,2}")
   String dice
 ) {
 
