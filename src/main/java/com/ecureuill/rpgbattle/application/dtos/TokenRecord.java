@@ -1,0 +1,7 @@
+package com.ecureuill.rpgbattle.application.dtos;
+
+public record TokenRecord(
+  String token
+) {
+  
+}

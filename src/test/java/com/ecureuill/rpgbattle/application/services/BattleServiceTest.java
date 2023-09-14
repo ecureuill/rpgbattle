@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import com.ecureuill.rpgbattle.application.dtos.BattleCreateRequest;
 import com.ecureuill.rpgbattle.application.dtos.BattleSelectCharacterRequest;
+import com.ecureuill.rpgbattle.application.exceptions.AuthorizationException;
 import com.ecureuill.rpgbattle.application.exceptions.BattleNotFoundException;
 import com.ecureuill.rpgbattle.application.exceptions.BattleStateException;
 import com.ecureuill.rpgbattle.application.exceptions.CharacterNotFoundException;
@@ -97,7 +98,7 @@ public class BattleServiceTest {
 
   @DisplayName("Should add character to the correct player of the battle")
   @Test
-  void testSelectCharacter() throws CharacterNotFoundException, BattleNotFoundException, PlayerNotFoundException, BattleStateException {
+  void testSelectCharacter() throws CharacterNotFoundException, BattleNotFoundException, PlayerNotFoundException, BattleStateException, AuthorizationException {
     DataFaker faker = DataFakerProvider.getInstace();
     BattleSelectCharacterRequest request = new BattleSelectCharacterRequest("specie");
     Battle battle = faker.generateBattle(true);
@@ -118,7 +119,7 @@ public class BattleServiceTest {
 
   @DisplayName("Should add the second character to the correct player and change battle state")
   @Test
-  void testSelectCharacter_SecondCharacter() throws CharacterNotFoundException, BattleNotFoundException, PlayerNotFoundException, BattleStateException {
+  void testSelectCharacter_SecondCharacter() throws CharacterNotFoundException, BattleNotFoundException, PlayerNotFoundException, BattleStateException, AuthorizationException {
     DataFaker faker = DataFakerProvider.getInstace();
     BattleSelectCharacterRequest request = new BattleSelectCharacterRequest("specie");
     Battle battle = faker.generateBattle(true);
@@ -142,7 +143,7 @@ public class BattleServiceTest {
 
   @DisplayName("Should determine that playerOne has the initiative")
   @Test
-  void testDetermineInitiative_PlayerOne() throws BattleStateException, BattleNotFoundException {
+  void testDetermineInitiative_PlayerOne() throws BattleStateException, BattleNotFoundException, AuthorizationException {
     DataFaker faker = DataFakerProvider.getInstace();
     Battle battle = faker.generateBattle(false);
     battle.setState(new InitiativeBattleState());
@@ -163,7 +164,7 @@ public class BattleServiceTest {
 
   @DisplayName("Should determine that playerTwo has the initiative")
   @Test
-  void testDetermineInitiative_PlayerTwo() throws BattleStateException, BattleNotFoundException {
+  void testDetermineInitiative_PlayerTwo() throws BattleStateException, BattleNotFoundException, AuthorizationException {
     DataFaker faker = DataFakerProvider.getInstace();
     Battle battle = faker.generateBattle(false);
     battle.setState(new InitiativeBattleState());
@@ -184,7 +185,7 @@ public class BattleServiceTest {
 
   @DisplayName("Should not determine initiative when dices value are equal")
   @Test
-  void testDetermineInitiative_DicesEqual() throws BattleStateException, BattleNotFoundException {
+  void testDetermineInitiative_DicesEqual() throws BattleStateException, BattleNotFoundException, AuthorizationException {
     DataFaker faker = DataFakerProvider.getInstace();
     Battle battle = faker.generateBattle(false);
     battle.setState(new InitiativeBattleState());

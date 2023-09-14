@@ -1,5 +1,6 @@
 package com.ecureuill.rpgbattle.infrastructure.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -10,9 +11,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -20,11 +21,10 @@ import lombok.RequiredArgsConstructor;
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
   private final SecurityFilter securityFilter;
 
   @Bean
-  public BCryptPasswordEncoder passwordEncoder() {
+  public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
 
@@ -37,8 +37,7 @@ public class SecurityConfig {
       )
       .authorizeHttpRequests(authz -> authz
         .requestMatchers("/v3/api-docs/**", "/api-docs/**", "/swagger-resources/**", "/swagger-ui/**").permitAll()
-        .requestMatchers(HttpMethod.POST, "/auth").permitAll()
-        .requestMatchers(HttpMethod.POST, "/users").permitAll()
+        .requestMatchers(HttpMethod.POST, "/battles/**").authenticated()
         .anyRequest().permitAll())
       .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
       
@@ -46,7 +45,7 @@ public class SecurityConfig {
   }
 
   @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
     return configuration.getAuthenticationManager();
   }
 

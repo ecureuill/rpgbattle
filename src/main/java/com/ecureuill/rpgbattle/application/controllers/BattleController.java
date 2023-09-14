@@ -29,6 +29,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.links.Link;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,7 @@ public class BattleController {
       @ApiResponse(responseCode = "201", description = "Battle created",links={@Link(description="Get battle")}),
       @ApiResponse(responseCode = "400", description = "Invalid battle parameters"),
   })
+  @SecurityRequirement(name = "bearer-key")
   @Transactional
   @PostMapping
   public ResponseEntity<BattleResponse> createBattle(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Usernames of who will battle") @RequestBody BattleCreateRequest battleUsers, UriComponentsBuilder uriBuilder) throws InvalidBattleParametersException, BattleStateException {
@@ -63,6 +65,7 @@ public class BattleController {
       @ApiResponse(responseCode = "200", description = "Character selected"),
       @ApiResponse(responseCode = "400", description = "Invalid battle parameters"),
   })
+  @SecurityRequirement(name = "bearer-key")
   @Transactional
   @PostMapping("/{battleId}/{player}")
   public ResponseEntity<BattleResponse> selectCharacter(@Parameter(description = "The battle id") @PathVariable UUID battleId, @Parameter(description = "The player username taht will slect a character") @PathVariable String player, @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "The character specie name") @RequestBody @Valid BattleSelectCharacterRequest data) throws InvalidBattleParametersException {
@@ -82,6 +85,7 @@ public class BattleController {
       @ApiResponse(responseCode = "200", description = "OK"),
       @ApiResponse(responseCode = "400", description = "Invalid battle parameters"),
   })
+  @SecurityRequirement(name = "bearer-key")
   @Transactional
   @PostMapping("/{battleId}/Initiative")
   public ResponseEntity<InitiativeResponse> determineInitiative(@Parameter(description = "The battle id") @PathVariable UUID battleId) throws BattleNotFoundException, InvalidBattleParametersException {
@@ -101,6 +105,7 @@ public class BattleController {
       @ApiResponse(responseCode = "200", description = "OK"),
       @ApiResponse(responseCode = "400", description = "Invalid battle parameters"),
   })
+  @SecurityRequirement(name = "bearer-key")
   @Transactional
   @PostMapping("/{battleId}/turns")
   public ResponseEntity<TurnResponse> turns(@Parameter(description = "The battle id") @PathVariable UUID battleId) throws BattleNotFoundException, InvalidBattleParametersException {
