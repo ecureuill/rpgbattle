@@ -4,6 +4,7 @@ import java.util.Optional;
 import com.ecureuill.rpgbattle.application.exceptions.NoTurnActiveException;
 import com.ecureuill.rpgbattle.application.exceptions.TurnNotFoundException;
 import com.ecureuill.rpgbattle.domain.battle.Battle;
+import com.ecureuill.rpgbattle.domain.battle.Player;
 import com.ecureuill.rpgbattle.domain.battle.PlayerBattle;
 import com.ecureuill.rpgbattle.domain.battle.Turn;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.AttackMoveState;
@@ -40,25 +41,27 @@ public class TurnsBattleState implements BattleTurnsStrategy {
     }
     
     Turn turn = optionalTurn.get();
-    TurnState state = turn.getState();
+    state = turn.getState();
 
     if(state instanceof NotInitiatedTurnState){
       throw new NoTurnActiveException();
     }
     else if(state instanceof AttackMoveState){
       AttackMoveState turnState = (AttackMoveState)state;
-      turnState.handle(turn);
+      turnState.handle(turn, getAttackingPlayer(context).getCharacter());
       context.getTurns().stream().map(item -> item.getId().equals(turn.getId())? turn: item);
     }
     else if(state instanceof DefenseMoveState){
       DefenseMoveState turnState = (DefenseMoveState)state;
-      turnState.handle(turn);
+      turnState.handle(turn, getDefendingPlayer(context).getCharacter());
+
     }      
     
     if(state instanceof DemageMoveState) {
       DemageMoveState turnState = (DemageMoveState)state;
-      turnState.handle(turn, context.getPlayers().get(context.getPlayerTurn()).getPlayer(), context.getPlayers().get(context.getPlayerTurn() == 1 ? 0: 1).getPlayer());
+      turnState.handle(turn, getAttackingPlayer(context), getDefendingPlayer(context));
       turnState.setNextState(turn);
+      state = turn.getState();
     }
 
     if(turn.getState() instanceof EndTurnState) {
@@ -68,5 +71,13 @@ public class TurnsBattleState implements BattleTurnsStrategy {
         setNextState(context);
       }
     }
+  }
+
+  private Player getAttackingPlayer(Battle context){
+    return context.getPlayers().get(context.getPlayerTurn()).getPlayer();
+  }
+
+  private Player getDefendingPlayer(Battle context){
+    return context.getPlayers().get(context.getPlayerTurn() == 0? 1 : 0).getPlayer();
   }
 }

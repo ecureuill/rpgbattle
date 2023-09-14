@@ -1,10 +1,8 @@
-package com.ecureuill.rpgbattle.domain.character;
+package com.ecureuill.rpgbattle.domain.battle;
 
 import java.util.UUID;
-
+import com.ecureuill.rpgbattle.domain.character.Type;
 import com.ecureuill.rpgbattle.domain.dice.Dice;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,16 +14,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "characters")
+@Table(name = "selected_characters")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Character {
+public class SelectedCharacter {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
   private Type type;
-  @Column(unique = true)
   private String specie;
   private Integer life;
   private Integer strength;
@@ -60,4 +57,14 @@ public class Character {
 	public Integer calculateAttack(Integer diceValue) {
 		return this.strength + this.agility + diceValue;
 	}
+
+  public SelectedCharacter(com.ecureuill.rpgbattle.domain.character.Character character) {
+    this.type = character.getType();
+    this.specie = character.getSpecie();
+    this.life = character.getLife();
+    this.strength = character.getStrength();
+    this.defence = character.getDefence();
+    this.agility = character.getAgility();
+    this.dice = character.getDice();
+  }
 }

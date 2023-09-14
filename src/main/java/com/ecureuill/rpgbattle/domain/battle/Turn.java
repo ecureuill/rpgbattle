@@ -28,16 +28,15 @@ public class Turn {
   private UUID id;
   private Integer turnSequence;
   private Integer attackDiceValue;
+  private Integer attack;
   private Integer defenceDiceValue;
+  private Integer defense;
   private Integer demageDiceValue;
   private Integer demage;
-  //Is not possible to mapped interface, so it is annoted as @Transient and an Enum is used as an conversion strategy
   @Transient 
   private TurnState state;
   @Enumerated(EnumType.STRING)
   private TurnStateType stateType;
-  @Transient
-  private ApplicationEventPublisher eventPublisher;
 
   public Turn() {
     this.turnSequence = 0;

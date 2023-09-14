@@ -13,7 +13,7 @@ import com.ecureuill.rpgbattle.domain.battle.states.battlestate.EndBattleState;
 import com.ecureuill.rpgbattle.domain.battle.states.battlestate.InitiativeBattleState;
 import com.ecureuill.rpgbattle.domain.battle.states.battlestate.NotCreatedBattleState;
 import com.ecureuill.rpgbattle.domain.battle.states.battlestate.TurnsBattleState;
-import com.ecureuill.rpgbattle.domain.character.Character;
+import com.ecureuill.rpgbattle.domain.battle.SelectedCharacter;
 import com.ecureuill.rpgbattle.domain.dice.Dice;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embedded;
@@ -110,7 +110,7 @@ public class Battle {
     this.initiative = new Initiative();
   }
 
-  public void addCharacter(String username, Character character) {
+  public void addCharacter(String username, SelectedCharacter character) {
     Player player = findPlayerByUsername(username);
     player.setCharacter(character);
     activeInitiative();

@@ -5,7 +5,7 @@ import com.ecureuill.rpgbattle.domain.battle.Battle;
 import com.ecureuill.rpgbattle.domain.battle.Player;
 import com.ecureuill.rpgbattle.domain.battle.PlayerBattle;
 import com.ecureuill.rpgbattle.domain.battle.strategies.battlestrategy.BattleCreatedStrategy;
-import com.ecureuill.rpgbattle.domain.character.Character;
+import com.ecureuill.rpgbattle.domain.battle.SelectedCharacter;
 
 public class CreatedBattleState implements BattleCreatedStrategy {
   private final BattleState nexState = new InitiativeBattleState();
@@ -18,7 +18,7 @@ public class CreatedBattleState implements BattleCreatedStrategy {
   }
 
   @Override
-  public void addCharacter(Battle context, String username, Character character) throws PlayerNotFoundException {
+  public void addCharacter(Battle context, String username, SelectedCharacter character) throws PlayerNotFoundException {
     Player player = context.findPlayerInBattle(username);
     player.setCharacter(character);
     context.updatePlayer(player);

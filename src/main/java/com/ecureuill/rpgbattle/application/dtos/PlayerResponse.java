@@ -4,10 +4,10 @@ import com.ecureuill.rpgbattle.domain.battle.Player;
 
 public record PlayerResponse(
   String username, 
-  CharacterResponse character
+  SelectedCharacterResponse character
 ) {
 
   public PlayerResponse(Player player) {
-    this(player.getUsername(), player.getCharacter() == null? null : new CharacterResponse(player.getCharacter()));
+    this(player.getUsername(), player.getCharacter() == null? null : new SelectedCharacterResponse(player.getCharacter()));
   }  
 }

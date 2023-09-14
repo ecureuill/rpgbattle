@@ -6,9 +6,11 @@ public record TurnResponse(
   Integer attackDiceValue,
   Integer defenseDiceValue,
   Integer damageDiceValue,
+  Integer attack,
+  Integer defense,
   Integer damage
 ) {
   public TurnResponse(Turn turn){
-    this(turn.getAttackDiceValue(), turn.getDefenceDiceValue(), turn.getDemageDiceValue(), turn.getDemage());
+    this(turn.getAttackDiceValue(), turn.getDefenceDiceValue(), turn.getDemageDiceValue(), turn.getAttack(), turn.getDefense(), turn.getDemage());
   }
 }

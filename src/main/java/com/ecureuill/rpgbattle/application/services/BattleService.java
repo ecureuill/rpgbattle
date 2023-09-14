@@ -3,6 +3,7 @@ package com.ecureuill.rpgbattle.application.services;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import com.ecureuill.rpgbattle.application.exceptions.TurnNotFoundException;
 import com.ecureuill.rpgbattle.application.services.specifications.QueryParamsSpecification;
 import com.ecureuill.rpgbattle.domain.battle.Battle;
 import com.ecureuill.rpgbattle.domain.battle.Player;
+import com.ecureuill.rpgbattle.domain.battle.SelectedCharacter;
 import com.ecureuill.rpgbattle.domain.battle.Turn;
 import com.ecureuill.rpgbattle.domain.battle.states.battlestate.CreatedBattleState;
 import com.ecureuill.rpgbattle.domain.battle.states.battlestate.EndBattleState;
@@ -28,7 +30,6 @@ import com.ecureuill.rpgbattle.domain.battle.states.battlestate.NotCreatedBattle
 import com.ecureuill.rpgbattle.domain.battle.states.battlestate.TurnsBattleState;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.EndTurnState;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.TurnStateType;
-import com.ecureuill.rpgbattle.domain.character.Character;
 import com.ecureuill.rpgbattle.infrastructure.repositories.BattleRepository;
 
 import jakarta.validation.Valid;
@@ -85,7 +86,7 @@ public class BattleService {
 
   public Battle selectCharacter(UUID battleId, String playerUsername, @Valid BattleSelectCharacterRequest data) throws BattleNotFoundException, PlayerNotFoundException, CharacterNotFoundException, BattleStateException {
     Battle battle = findBattleById(battleId);
-    Character character = characterService.getCharacterBySpecie(data.specie());
+    SelectedCharacter character = new SelectedCharacter(characterService.getCharacterBySpecie(data.specie()));
 
     try {
       ((CreatedBattleState)battle.getState()).addCharacter(battle, playerUsername, character);
@@ -116,15 +117,20 @@ public class BattleService {
     validateBattleState(battle);
     TurnsBattleState state = (TurnsBattleState) battle.getState();
 
-    if(isTurnNotInitiated(battle) || isTurnOver(battle)){
+    if(isTurnNotInitiated(battle)){
       startNewTurn(battle);
+    }
+
+    if(isTurnOver(battle)){
+      startNewTurn(battle);
+      battle.setLastTurnTime(LocalDateTime.now());
     }
 
     state.turnAction(battle);
     battleRepository.save(battle);
 
     if(isBattleOver(battle)){
-      endBattle(battle);
+      endedBattle(battle);
     }
 
     battleRepository.save(battle);
@@ -136,11 +142,14 @@ public class BattleService {
     return battle.getState() instanceof EndBattleState;
   }
 
-  private void endBattle(Battle battle){
+  private void endedBattle(Battle battle){
     battle.setEndTime(LocalDateTime.now());
   }
   private void startNewTurn(Battle battle){
-    battle.getTurns().add(new Turn());
+    Turn turn = new Turn();
+    turn.setTurnSequence(battle.getTurnsSequence() + 1);
+    battle.getTurns().add(turn);
+    battle.setTurnsSequence(battle.getTurnsSequence() + 1);
     battle = battleRepository.save(battle);
     battle.setCurrentTurnId(findActiveTurn(battle));
   }
@@ -149,11 +158,17 @@ public class BattleService {
   }
 
   private Boolean isTurnOver(Battle battle){
-    return ((TurnsBattleState)battle.getState()).getTurnState() instanceof EndTurnState;
+    Optional<Turn> optionalTurn = battle.getCurrentTurn();
+    
+    if(optionalTurn.isEmpty()){
+      return false;
+    }
+
+    return optionalTurn.get().getState() instanceof EndTurnState;
   }
 
   private void validateBattleState(Battle battle) throws BattleStateException{
-    if(battle.getState() instanceof TurnsBattleState){
+    if(!(battle.getState() instanceof TurnsBattleState)){
       throw new BattleStateException("This operation is not allowed while battle is in " + battle.getStage().getName());
     }
   }

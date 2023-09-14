@@ -2,7 +2,6 @@ package com.ecureuill.rpgbattle.domain.battle;
 
 import java.util.List;
 import java.util.UUID;
-import com.ecureuill.rpgbattle.domain.character.Character;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,8 +26,8 @@ public class Player {
   private String username;
   @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
   private List<PlayerBattle> battles;
-  @OneToOne
-  private Character character;
+  @OneToOne(cascade = CascadeType.ALL)
+  private SelectedCharacter character;
 
   @Override
   public String toString() {
