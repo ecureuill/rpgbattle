@@ -1,10 +1,9 @@
 package com.ecureuill.rpgbattle.domain.battle;
 
 import java.util.UUID;
-import org.springframework.context.ApplicationEventPublisher;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.AttackMoveState;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.DefenseMoveState;
-import com.ecureuill.rpgbattle.domain.battle.states.turnstate.DemageMoveState;
+import com.ecureuill.rpgbattle.domain.battle.states.turnstate.DamageMoveState;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.EndTurnState;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.TurnState;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.TurnStateType;
@@ -29,10 +28,10 @@ public class Turn {
   private Integer turnSequence;
   private Integer attackDiceValue;
   private Integer attack;
-  private Integer defenceDiceValue;
+  private Integer defenseDiceValue;
   private Integer defense;
-  private Integer demageDiceValue;
-  private Integer demage;
+  private Integer damageDiceValue;
+  private Integer damage;
   @Transient 
   private TurnState state;
   @Enumerated(EnumType.STRING)
@@ -47,14 +46,14 @@ public class Turn {
   void fillTransient() {
     if(stateType != null){
       switch (stateType) {
-        case IS_ATACK_MOVE:
+        case IS_ATTACK_MOVE:
           state = new AttackMoveState();
           break;
         case IS_DEFENSE_MOVE:
           state = new DefenseMoveState();
           break;
-        case IS_DEMAGE_MOVE:
-          state = new DemageMoveState();
+        case IS_DAMAGE_MOVE:
+          state = new DamageMoveState();
           break;
         case IS_END:
           state = new EndTurnState();
@@ -70,11 +69,11 @@ public class Turn {
     if(state instanceof EndTurnState) {
       this.stateType = TurnStateType.IS_END;
     } else if (state instanceof AttackMoveState) {
-      this.stateType = TurnStateType.IS_ATACK_MOVE;
+      this.stateType = TurnStateType.IS_ATTACK_MOVE;
     } else if (state instanceof DefenseMoveState) {
       this.stateType = TurnStateType.IS_DEFENSE_MOVE;
-    } else if (state instanceof DemageMoveState) {
-      this.stateType = TurnStateType.IS_DEMAGE_MOVE;
+    } else if (state instanceof DamageMoveState) {
+      this.stateType = TurnStateType.IS_DAMAGE_MOVE;
     }
   }
 }

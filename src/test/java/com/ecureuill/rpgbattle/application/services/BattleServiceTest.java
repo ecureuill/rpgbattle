@@ -20,6 +20,7 @@ import com.ecureuill.rpgbattle.application.exceptions.InvalidBattleParametersExc
 import com.ecureuill.rpgbattle.application.exceptions.PlayerNotFoundException;
 import com.ecureuill.rpgbattle.domain.battle.Battle;
 import com.ecureuill.rpgbattle.domain.battle.Player;
+import com.ecureuill.rpgbattle.domain.battle.SelectedCharacter;
 import com.ecureuill.rpgbattle.domain.battle.Stage;
 import com.ecureuill.rpgbattle.domain.battle.states.battlestate.CreatedBattleState;
 import com.ecureuill.rpgbattle.domain.battle.states.battlestate.InitiativeBattleState;
@@ -80,7 +81,6 @@ public class BattleServiceTest {
 
     Mockito.verify(userService, Mockito.times(1)).findByUsername(Mockito.anyString());
     Mockito.verify(battleRepository, Mockito.times(0)).save(Mockito.any(Battle.class));
-  
   }
 
   @DisplayName("Should throw InvalidBattleParametersException when playerOne and playerTwo are the same")
@@ -112,7 +112,7 @@ public class BattleServiceTest {
     ArgumentCaptor<Battle> battleArgumentCaptor = ArgumentCaptor.forClass(Battle.class);
     Mockito.verify(battleRepository, Mockito.times(1)).save(battleArgumentCaptor.capture());
     var result = battleArgumentCaptor.getValue();
-    Assertions.assertEquals(character, result.getPlayers().get(1).getPlayer().getCharacter());
+    Assertions.assertEquals(new SelectedCharacter(character), result.getPlayers().get(1).getPlayer().getCharacter());
     Assertions.assertEquals(CreatedBattleState.class, result.getState().getClass());
   }
 
@@ -124,7 +124,7 @@ public class BattleServiceTest {
     Battle battle = faker.generateBattle(true);
     battle.setState(new CreatedBattleState());
     Character characterOne = faker.generateCharacter();
-    battle.getPlayers().get(1).getPlayer().setCharacter(characterOne);
+    battle.getPlayers().get(1).getPlayer().setCharacter(new SelectedCharacter(characterOne));
     Character characterTwo = faker.generateCharacter();
 
     Mockito.when(battleRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.of(battle));
@@ -135,8 +135,8 @@ public class BattleServiceTest {
     ArgumentCaptor<Battle> battleArgumentCaptor = ArgumentCaptor.forClass(Battle.class);
     Mockito.verify(battleRepository, Mockito.times(1)).save(battleArgumentCaptor.capture());
     var result = battleArgumentCaptor.getValue();
-    Assertions.assertEquals(characterOne, result.getPlayers().get(1).getPlayer().getCharacter());
-    Assertions.assertEquals(characterTwo, result.getPlayers().get(0).getPlayer().getCharacter());
+    Assertions.assertEquals(new SelectedCharacter(characterOne), result.getPlayers().get(1).getPlayer().getCharacter());
+    Assertions.assertEquals(new SelectedCharacter(characterTwo), result.getPlayers().get(0).getPlayer().getCharacter());
     Assertions.assertEquals(InitiativeBattleState.class, result.getState().getClass());
   }
 
@@ -201,6 +201,5 @@ public class BattleServiceTest {
     Assertions.assertEquals(1, result.getInitiative().getPlayerOneDiceValue());
     Assertions.assertEquals(1, result.getInitiative().getPlayerTwoDiceValue());
     Assertions.assertEquals(InitiativeBattleState.class, result.getState().getClass());
-    
   }
 }

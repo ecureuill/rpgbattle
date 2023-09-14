@@ -9,15 +9,16 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.ecureuill.rpgbattle.domain.battle.Player;
+import com.ecureuill.rpgbattle.domain.battle.SelectedCharacter;
 import com.ecureuill.rpgbattle.domain.battle.Turn;
-import com.ecureuill.rpgbattle.domain.battle.states.turnstate.DemageMoveState;
+import com.ecureuill.rpgbattle.domain.battle.states.turnstate.DamageMoveState;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.EndTurnState;
 import com.ecureuill.rpgbattle.domain.character.Character;
 import com.ecureuill.rpgbattle.utils.DataFaker;
 import com.ecureuill.rpgbattle.utils.DataFakerProvider;
 
 @ExtendWith(MockitoExtension.class)
-public class DemageMoveStateTest {
+public class DamageMoveStateTest {
   @Mock 
   private Turn context;
   @Mock
@@ -27,17 +28,17 @@ public class DemageMoveStateTest {
   @Mock
   private Character character;
   @InjectMocks
-  private DemageMoveState demageMoveState;
+  private DamageMoveState damageMoveState;
 
   @Test
   @DisplayName("Should set the correct next state")
   public void testHandle(){
     DataFaker dataFaker = DataFakerProvider.getInstace();
-    Mockito.when(attackPlayer.getCharacter()).thenReturn(dataFaker.generateCharacter());
-    Mockito.when(defensePlayer.getCharacter()).thenReturn(dataFaker.generateCharacter());
+    Mockito.when(attackPlayer.getCharacter()).thenReturn(new SelectedCharacter(dataFaker.generateCharacter()));
+    Mockito.when(defensePlayer.getCharacter()).thenReturn(new SelectedCharacter(dataFaker.generateCharacter()));
 
-    DemageMoveState demageMoveState = new DemageMoveState();
-    demageMoveState.handle(context, attackPlayer, defensePlayer);
+    DamageMoveState damageMoveState = new DamageMoveState();
+    damageMoveState.handle(context, attackPlayer, defensePlayer);
     Mockito.verify(context, Mockito.times(1)).setState(Mockito.any(EndTurnState.class));
 
   }

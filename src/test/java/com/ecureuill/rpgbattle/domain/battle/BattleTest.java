@@ -27,7 +27,7 @@ public class BattleTest {
   @Test
   void testAddCharacter_CharacterSelection() {
     Battle battle =  dataFaker.generateBattle(true);
-    battle.addCharacter(battle.getPlayers().get(0).getPlayer().getUsername(), dataFaker.generateCharacter());
+    battle.addCharacter(battle.getPlayers().get(0).getPlayer().getUsername(), new SelectedCharacter(dataFaker.generateCharacter()));
     Assertions.assertEquals(Stage.CHARACTER_SELECTION, battle.getStage());
   }
 
@@ -35,8 +35,8 @@ public class BattleTest {
   @Test
   void testAddCharacter_Initiative() {
     Battle battle =  dataFaker.generateBattle(true);
-    battle.addCharacter(battle.getPlayers().get(0).getPlayer().getUsername(), dataFaker.generateCharacter());
-    battle.addCharacter(battle.getPlayers().get(1).getPlayer().getUsername(), dataFaker.generateCharacter());
+    battle.addCharacter(battle.getPlayers().get(0).getPlayer().getUsername(), new SelectedCharacter(dataFaker.generateCharacter()));
+    battle.addCharacter(battle.getPlayers().get(1).getPlayer().getUsername(), new SelectedCharacter(dataFaker.generateCharacter()));
     Assertions.assertEquals(Stage.INITIATIVE, battle.getStage());
   }
   
@@ -83,8 +83,8 @@ public class BattleTest {
     Mockito.when(dice.roll()).thenReturn(1, 1);
     Battle battle =  dataFaker.generateBattle(true);
     battle.setDice(dice);
-    battle.addCharacter(battle.getPlayers().get(0).getPlayer().getUsername(), dataFaker.generateCharacter());
-    battle.addCharacter(battle.getPlayers().get(1).getPlayer().getUsername(), dataFaker.generateCharacter());
+    battle.addCharacter(battle.getPlayers().get(0).getPlayer().getUsername(), new SelectedCharacter(dataFaker.generateCharacter()));
+    battle.addCharacter(battle.getPlayers().get(1).getPlayer().getUsername(), new SelectedCharacter(dataFaker.generateCharacter()));
     battle.initiative();
 
     Assertions.assertEquals(Stage.INITIATIVE, battle.getStage());
@@ -97,8 +97,8 @@ public class BattleTest {
     Mockito.doReturn(1, 2).when(dice).roll();
     Battle battle =  dataFaker.generateBattle(true);
     battle.setDice(dice);
-    battle.addCharacter(battle.getPlayers().get(0).getPlayer().getUsername(), dataFaker.generateCharacter());
-    battle.addCharacter(battle.getPlayers().get(1).getPlayer().getUsername(), dataFaker.generateCharacter());
+    battle.addCharacter(battle.getPlayers().get(0).getPlayer().getUsername(), new SelectedCharacter(dataFaker.generateCharacter()));
+    battle.addCharacter(battle.getPlayers().get(1).getPlayer().getUsername(), new SelectedCharacter(dataFaker.generateCharacter()));
     battle.initiative();
     Assertions.assertEquals(Stage.TURNS, battle.getStage());
   }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
+
 import com.ecureuill.rpgbattle.application.dtos.BattleCreateRequest;
 import com.ecureuill.rpgbattle.application.dtos.CharacterRequest;
 import com.ecureuill.rpgbattle.domain.character.Type;
@@ -11,6 +13,7 @@ import com.ecureuill.rpgbattle.domain.dice.Dice;
 import com.ecureuill.rpgbattle.domain.battle.Battle;
 import com.ecureuill.rpgbattle.domain.battle.Player;
 import com.ecureuill.rpgbattle.domain.battle.PlayerBattle;
+import com.ecureuill.rpgbattle.domain.battle.SelectedCharacter;
 import com.ecureuill.rpgbattle.domain.character.Character;
 import com.github.javafaker.Faker;
 
@@ -46,6 +49,7 @@ public class DataFaker {
       Player playerOne = generatePlayer(withoutCharacter);
       Player playerTwo = generatePlayer(withoutCharacter);
       Battle battle = new Battle( );
+      battle.setId(UUID.randomUUID());
       PlayerBattle playerBattleOne = new PlayerBattle();
       playerBattleOne.setBattle(battle);
       playerBattleOne.setPlayer(playerOne);
@@ -62,7 +66,7 @@ public class DataFaker {
   }
 
   public Player generatePlayer(){
-    return new Player(null, faker.name().username(), null, generateCharacter());
+    return new Player(null, faker.name().username(), null, new SelectedCharacter(generateCharacter()));
   }
 
   public Player generatePlayer(Boolean withoutCharacter){

@@ -11,6 +11,6 @@ public record TurnResponse(
   Integer damage
 ) {
   public TurnResponse(Turn turn){
-    this(turn.getAttackDiceValue(), turn.getDefenceDiceValue(), turn.getDemageDiceValue(), turn.getAttack(), turn.getDefense(), turn.getDemage());
+    this(turn.getAttackDiceValue(), turn.getDefenseDiceValue(), turn.getDamageDiceValue(), turn.getAttack(), turn.getDefense(), turn.getDamage());
   }
 }

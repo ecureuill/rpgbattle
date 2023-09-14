@@ -6,21 +6,21 @@ import com.ecureuill.rpgbattle.domain.battle.strategies.turnstrategy.TurnDefense
 import com.ecureuill.rpgbattle.domain.dice.Dice;
 
 public class DefenseMoveState implements TurnDefenseStrategy {
-  private TurnState nextDemage = new DemageMoveState();
+  private TurnState nextDamage = new DamageMoveState();
   private TurnState nextEnd = new EndTurnState();
 
   @Override
   public void handle(Turn context, SelectedCharacter character) {
     Integer diceValue = (new Dice()).roll();
-    context.setDefenceDiceValue(diceValue);
+    context.setDefenseDiceValue(diceValue);
     context.setDefense(character.calculateDenfense(diceValue));
     setNextState(context);
   }
 
   @Override
   public void setNextState(Turn context) {
-    if(context.getAttackDiceValue() > context.getDefenceDiceValue()){
-      context.setState(nextDemage);
+    if(context.getAttackDiceValue() > context.getDefenseDiceValue()){
+      context.setState(nextDamage);
     }
     else {
       context.setState(nextEnd);

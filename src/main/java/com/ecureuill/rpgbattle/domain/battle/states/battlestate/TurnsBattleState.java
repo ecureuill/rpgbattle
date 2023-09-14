@@ -9,7 +9,7 @@ import com.ecureuill.rpgbattle.domain.battle.PlayerBattle;
 import com.ecureuill.rpgbattle.domain.battle.Turn;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.AttackMoveState;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.DefenseMoveState;
-import com.ecureuill.rpgbattle.domain.battle.states.turnstate.DemageMoveState;
+import com.ecureuill.rpgbattle.domain.battle.states.turnstate.DamageMoveState;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.EndTurnState;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.NotInitiatedTurnState;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.TurnState;
@@ -57,8 +57,8 @@ public class TurnsBattleState implements BattleTurnsStrategy {
 
     }      
     
-    if(state instanceof DemageMoveState) {
-      DemageMoveState turnState = (DemageMoveState)state;
+    if(state instanceof DamageMoveState) {
+      DamageMoveState turnState = (DamageMoveState)state;
       turnState.handle(turn, getAttackingPlayer(context), getDefendingPlayer(context));
       turnState.setNextState(turn);
       state = turn.getState();
