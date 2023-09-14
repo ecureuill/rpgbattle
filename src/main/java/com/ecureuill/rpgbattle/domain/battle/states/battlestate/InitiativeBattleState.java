@@ -12,7 +12,7 @@ public class InitiativeBattleState implements BattleInitiativeStrategy {
     if(context.getInitiative().getPlayerOneDiceValue().equals(context.getInitiative().getPlayerTwoDiceValue())) {
       return;
     }
-      
+    
     context.setState(nexState);
   }
 
@@ -24,15 +24,13 @@ public class InitiativeBattleState implements BattleInitiativeStrategy {
     context.getInitiative().setPlayerTwoDiceValue(context.getDice().roll());
 
     if(context.getInitiative().getPlayerOneDiceValue() > context.getInitiative().getPlayerTwoDiceValue()) {
-      context.getInitiative().setPlayer(context.getPlayers().get(0).getPlayer());
+      context.setPlayerTurn(0);
     }
     else if(context.getInitiative().getPlayerOneDiceValue() < context.getInitiative().getPlayerTwoDiceValue()) {
-      context.getInitiative().setPlayer(context.getPlayers().get(1).getPlayer());
+      context.setPlayerTurn(1);
     }
-    else {
-      context.getInitiative().setPlayer(null);
-    }
-
     setNextState(context);
   }
+
+
 }

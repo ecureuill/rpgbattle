@@ -4,10 +4,8 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
 public class Initiative {
@@ -18,7 +16,17 @@ public class Initiative {
   @Transient
   private Player player;
 
+  public Initiative() {
+    this.playerOneDiceValue = 0;
+    this.playerTwoDiceValue = 0;
+    this.status = "";
+    this.player = null;
+  }
   public String getStatus(){
+    if(playerOneDiceValue == 0 || playerTwoDiceValue == 0)
+    {
+      return "Not determined";
+    }
     if(playerOneDiceValue > playerTwoDiceValue){
       return "player one has the initiative";
     }
@@ -26,7 +34,7 @@ public class Initiative {
       return "player two has the initiative";
     }
     else {
-      return "tie";
+      return "Not determined";
     }
   }
 }

@@ -16,11 +16,14 @@ import com.ecureuill.rpgbattle.application.dtos.BattleCreateRequest;
 import com.ecureuill.rpgbattle.application.dtos.BattleResponse;
 import com.ecureuill.rpgbattle.application.dtos.BattleSelectCharacterRequest;
 import com.ecureuill.rpgbattle.application.dtos.InitiativeResponse;
+import com.ecureuill.rpgbattle.application.dtos.TurnResponse;
 import com.ecureuill.rpgbattle.application.exceptions.BattleNotFoundException;
 import com.ecureuill.rpgbattle.application.exceptions.BattleStateException;
 import com.ecureuill.rpgbattle.application.exceptions.InvalidBattleParametersException;
 import com.ecureuill.rpgbattle.application.services.BattleService;
 import com.ecureuill.rpgbattle.domain.battle.Battle;
+import com.ecureuill.rpgbattle.domain.battle.Turn;
+
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -60,6 +63,17 @@ public class BattleController {
     }
   }  
 
+  @Transactional
+  @PostMapping("/{battleId}/turns")
+  public ResponseEntity<TurnResponse> turns(@PathVariable UUID battleId) throws BattleNotFoundException, InvalidBattleParametersException {
+    try {
+      Battle battle = battleService.takeTurns(battleId);
+      return ResponseEntity.ok(new TurnResponse(battle.getCurrentTurn().orElse(new Turn())));
+    } catch (Exception e) {
+      throw new InvalidBattleParametersException("Battle not started\n"+e.getMessage(), e);
+    }
+  }
+  
   @GetMapping
   public ResponseEntity<List<BattleResponse>> getAllBattles(@RequestParam(required=false) MultiValueMap<String, String> queryParams) {
     return ResponseEntity.ok().body(battleService.getAllBattles(queryParams).stream().map(BattleResponse::new).collect(Collectors.toList()));

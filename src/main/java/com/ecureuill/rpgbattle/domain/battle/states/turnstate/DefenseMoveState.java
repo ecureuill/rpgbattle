@@ -11,6 +11,7 @@ public class DefenseMoveState implements TurnDefenseStrategy {
   @Override
   public void handle(Turn context) {
     context.setDefenceDiceValue(new Dice().roll());
+    setNextState(context);
   }
 
   @Override

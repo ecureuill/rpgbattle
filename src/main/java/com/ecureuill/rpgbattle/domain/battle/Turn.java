@@ -1,10 +1,8 @@
 package com.ecureuill.rpgbattle.domain.battle;
 
 import java.util.UUID;
-
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-
 import com.ecureuill.rpgbattle.domain.battle.events.AttackTurnEvent;
 import com.ecureuill.rpgbattle.domain.battle.events.EndTurnEvent;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.AttackMoveState;
@@ -13,7 +11,6 @@ import com.ecureuill.rpgbattle.domain.battle.states.turnstate.DemageMoveState;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.EndTurnState;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.TurnState;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.TurnStateType;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -21,7 +18,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PostLoad;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.Data;
@@ -46,6 +42,11 @@ public class Turn implements ApplicationEventPublisherAware {
   @Transient
   private ApplicationEventPublisher eventPublisher;
 
+  public Turn() {
+    this.turnSequence = 0;
+    this.state = new AttackMoveState();
+  }
+
   @PostLoad
   void fillTransient() {
     if(stateType != null){
@@ -68,8 +69,8 @@ public class Turn implements ApplicationEventPublisherAware {
     }
   }
 
-  @PrePersist
-  void fillPersist() {
+  public void setState(TurnState state) {
+    this.state = state;
     if(state instanceof EndTurnState) {
       this.stateType = TurnStateType.IS_END;
     } else if (state instanceof AttackMoveState) {

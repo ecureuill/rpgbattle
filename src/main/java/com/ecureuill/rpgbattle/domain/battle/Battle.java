@@ -3,6 +3,7 @@ package com.ecureuill.rpgbattle.domain.battle;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.context.event.EventListener;
@@ -25,7 +26,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PostLoad;
 import jakarta.persistence.PrePersist;
@@ -45,10 +45,9 @@ public class Battle {
   private Stage stage;
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "battle")
   private List<PlayerBattle> players;
-  @OneToMany
-  @JoinColumn(name = "turnId")
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private List<Turn> turns;  
-  private UUID currentTurn;
+  private UUID currentTurnId;
   private Integer turnsSequence = 0; 
   private Integer playerTurn;
   @CreationTimestamp
@@ -63,6 +62,10 @@ public class Battle {
   private BattleState state;
   @Embedded
   private Initiative initiative;
+
+  public Optional<Turn> getCurrentTurn() {
+    return turns.stream().filter(item -> item.getId().equals(currentTurnId)).findFirst();
+  }
 
   public void setState(BattleState state) {
     this.state = state;
@@ -108,7 +111,7 @@ public class Battle {
     this.stage = Stage.CHARACTER_SELECTION;
     this.startTime = LocalDateTime.now();
     this.turns = new ArrayList<>();
-    this.currentTurn = null;
+    this.currentTurnId = null;
     this.dice = new Dice();
     this.state = new NotCreatedBattleState();
     this.initiative = new Initiative();

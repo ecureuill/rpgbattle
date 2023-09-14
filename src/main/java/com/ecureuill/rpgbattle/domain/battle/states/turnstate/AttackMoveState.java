@@ -11,6 +11,7 @@ public class AttackMoveState implements TurnAttackStrategy{
   public void setNextState(Turn context) {
     context.setState(next);
   }
+  
   @Override
   public void handle(Turn context) {
     context.setAttackDiceValue(new Dice().roll());
