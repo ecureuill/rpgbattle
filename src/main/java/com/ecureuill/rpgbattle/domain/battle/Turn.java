@@ -2,7 +2,6 @@ package com.ecureuill.rpgbattle.domain.battle;
 
 import java.util.UUID;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.AttackMoveState;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.DefenseMoveState;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.DemageMoveState;
@@ -23,7 +22,7 @@ import lombok.Data;
 @Entity
 @Table(name = "turns")
 @Data
-public class Turn implements ApplicationEventPublisherAware {
+public class Turn {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
@@ -78,27 +77,5 @@ public class Turn implements ApplicationEventPublisherAware {
     } else if (state instanceof DemageMoveState) {
       this.stateType = TurnStateType.IS_DEMAGE_MOVE;
     }
-  }
-
-  @Override
-  public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
-    this.eventPublisher = applicationEventPublisher;
-  }
-
-  public void movement(Player attackPlayer, Player defensePlayer){
-
-    if(state instanceof AttackMoveState){
-      ((AttackMoveState)state).handle(this);
-    }
-    else if(state instanceof DefenseMoveState){
-      ((DefenseMoveState)state).handle(this);
-    }
-    else if(state instanceof DemageMoveState){
-      ((DemageMoveState)state).handle(this, attackPlayer, defensePlayer);
-    } 
-    else {
-      return;
-    }
-    state.setNextState(null);
   }
 }
