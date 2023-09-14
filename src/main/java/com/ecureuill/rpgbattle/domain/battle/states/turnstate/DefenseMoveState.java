@@ -19,7 +19,7 @@ public class DefenseMoveState implements TurnDefenseStrategy {
 
   @Override
   public void setNextState(Turn context) {
-    if(context.getAttackDiceValue() > context.getDefenseDiceValue()){
+    if(context.getAttack() > context.getDefense()){
       context.setState(nextDamage);
     }
     else {
