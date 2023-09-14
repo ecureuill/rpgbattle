@@ -3,8 +3,6 @@ package com.ecureuill.rpgbattle.domain.battle;
 import java.util.UUID;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import com.ecureuill.rpgbattle.domain.battle.events.AttackTurnEvent;
-import com.ecureuill.rpgbattle.domain.battle.events.EndTurnEvent;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.AttackMoveState;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.DefenseMoveState;
 import com.ecureuill.rpgbattle.domain.battle.states.turnstate.DemageMoveState;
@@ -102,15 +100,5 @@ public class Turn implements ApplicationEventPublisherAware {
       return;
     }
     state.setNextState(null);
-
-    if(state instanceof EndTurnEvent) {
-      eventPublisher.publishEvent(new EndTurnEvent(this, this));
-    }
-
-    if(state instanceof AttackMoveState) {
-      eventPublisher.publishEvent(new AttackTurnEvent(this, this));
-    }
   }
-
 }
-

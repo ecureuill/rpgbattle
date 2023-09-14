@@ -6,17 +6,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.context.event.EventListener;
 import com.ecureuill.rpgbattle.application.exceptions.PlayerNotFoundException;
-import com.ecureuill.rpgbattle.domain.battle.events.TurnEvent;
 import com.ecureuill.rpgbattle.domain.battle.states.battlestate.BattleState;
 import com.ecureuill.rpgbattle.domain.battle.states.battlestate.CreatedBattleState;
 import com.ecureuill.rpgbattle.domain.battle.states.battlestate.EndBattleState;
 import com.ecureuill.rpgbattle.domain.battle.states.battlestate.InitiativeBattleState;
 import com.ecureuill.rpgbattle.domain.battle.states.battlestate.NotCreatedBattleState;
 import com.ecureuill.rpgbattle.domain.battle.states.battlestate.TurnsBattleState;
-import com.ecureuill.rpgbattle.domain.battle.strategies.turnstrategy.EventStrategyManager;
-import com.ecureuill.rpgbattle.domain.battle.strategies.turnstrategy.TurnEventStrategy;
 import com.ecureuill.rpgbattle.domain.character.Character;
 import com.ecureuill.rpgbattle.domain.dice.Dice;
 import jakarta.persistence.CascadeType;
@@ -28,7 +24,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PostLoad;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
@@ -56,8 +51,6 @@ public class Battle {
   private LocalDateTime endTime;
   @Transient
   private Dice dice;
-  @Transient
-  private EventStrategyManager eventStrategyManager;
   @Transient
   private BattleState state;
   @Embedded
@@ -115,7 +108,6 @@ public class Battle {
     this.dice = new Dice();
     this.state = new NotCreatedBattleState();
     this.initiative = new Initiative();
-    this.eventStrategyManager = new EventStrategyManager();
   }
 
   public void addCharacter(String username, Character character) {
@@ -155,24 +147,6 @@ public class Battle {
       return players.get(0).getPlayer();
     } else {
       return players.get(1).getPlayer();
-    }
-  }
-
-  public void addTurn(Turn turn) {
-    this.turns.add(turn);
-    this.lastTurnTime = LocalDateTime.now();
-  }
-  
-  @PrePersist
-  protected void onCreate() {
-    this.startTime = LocalDateTime.now();
-  }
-
-  @EventListener
-  public void onTurnEvent(TurnEvent turnEvent) {
-    TurnEventStrategy strategy = eventStrategyManager.getStrategy(turnEvent);
-    if(strategy != null){
-      strategy.handleEvent(turnEvent, this);
     }
   }
   
